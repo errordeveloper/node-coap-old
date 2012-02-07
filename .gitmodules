@@ -1,0 +1,9 @@
+[submodule "import/libcoap"]
+	path = import/libcoap
+	url = git://libcoap.git.sourceforge.net/gitroot/libcoap/libcoap
+[submodule "import/copper"]
+	path = import/copper
+	url = git://github.com/mkovatsc/Copper.git
+[submodule "import/coapy"]
+	path = import/coapy
+	url = git://coapy.git.sourceforge.net/gitroot/coapy/coapy
