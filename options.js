@@ -1,10 +1,10 @@
-// 5.10.  Option Definitions (Draft 08)
+// 5.10.  optionsion table (Draft 08)
 
-module.exports = new function () {
+module.exports = ( function () {
 
-  var opt = {
+  var options = {
 
-    arry: [
+    table: [
       /*  0 */[ /* no-op */ ],
       /*  1 */[true,    'Content-Type', 'usigned', 0, 2, ,     false],
       /*  2 */[false,   'Max-Age', 'unsigned', 0, 4, 60,       false],
@@ -24,33 +24,33 @@ module.exports = new function () {
       /* 16 - 20 */ [], [], [], [], [], /* reserved */
       /* 21 */[true,    'If-None-Match', , 0, , , /* check? */ false]
     ],
-    desc: { // almost direct implementation of Table 1
-      isCritical:       function(n) { return opt.arry[n][0]; },
-      //XXX: would this be kindda optimized and how can I check?
+
+    getters: { // almost direct implementation of Table 1
+      isCritical:       function(n) { return options.table[n][0]; },
+      //XXX: would this be kindda optionsimized and how can I check?
       isCriticalAlt:    function(n) { return n%2 ? true : false; },
-      optionName:       function(n) { return opt.arry[n][1]; },
-      dataType:         function(n) { return opt.arry[n][2]; },
-      minLenght:        function(n) { return opt.arry[n][3]; },
-      maxLength:        function(n) { return opt.arry[n][4]; },
-      defaultValue:     function(n) { return opt.arry[n][5]; },
-      allowMultiple:    function(n) { return opt.arry[n][6]; },
+      getName:          function(n) { return options.table[n][1]; },
+      dataType:         function(n) { return options.table[n][2]; },
+      minLenght:        function(n) { return options.table[n][3]; },
+      maxLength:        function(n) { return options.table[n][4]; },
+      defaultValue:     function(n) { return options.table[n][5]; },
+      allowMultiple:    function(n) { return options.table[n][6]; },
       isDefined:        function(n)
       {
-        if (n in opt.arry) {
-          if (opt.arry[n][0] || !opt.arry[n][0]) {
+        if (n in options.table) {
+          if (options.table[n][0] || !options.table[n][0]) {
             return true;
           } else { return false; }
         } else { return false; }
       },
-      lookup: {}
+      byName: {}
     }
   }
 
-  for (var o in opt.arry) {
-    if (opt.arry[o][1]) {
-      opt.desc.lookup[opt.arry[o][1]]=o;
+  for (var n in options.table) {
+    if (options.table[n][1]) {
+      options.getters.byName[options.table[n][1]]=n;
     }
   }
 
-  return opt.desc;
-}
+  return options.getters; } () );
