@@ -4,54 +4,35 @@ module.exports = new function () {
 
   var opt = {
 
-/* http -> coap =
-  * {
-  *        'Content-Type'  : 'CONTENT_TYPE',
-  *        'Max-Age'       : 'MAX_AGE',
-  *        'Proxy-Uri'     : 'PROXY_URI',
-  *        'ETag'          : 'ETAG',
-  *        'Uri-Host'      : 'URI_HOST',
-  *        'Location-Path' : 'LOCATION_PATH',
-  *        'Uri-Port'      : 'URI_PORT',
-  *        'Location-Query': 'LOCATION_QUERY',
-  *        'Uri-Path'      : 'URI_PATH',
-  *        'Token'         : 'TOKEN',
-  *        'Accept'        : 'ACCEPT',
-  *        'If-Match'      : 'MATCH',
-  *        'Uri-Query'     : 'URI_QUERY',
-  *        'If-None-Match' : 'NONE_MATCH'
-} */
-
     arry: [
       /*  0 */[ /* no-op */ ],
-      /*  1 */[true,    'CONTENT_TYPE', 'Content Type', 'usigned', 0, 2, ],
-      /*  2 */[false,   'MAX_AGE', 'Maximum Age', 'unsigned', 0, 4, 60],
-      /*  3 */[true,    'PROXY_URI', 'Proxy URI', 'string', 1, 270, ],
-      /*  4 */[false,   'ETAG', 'Etag', 'opaque', 1, 8, ],
-      /*  5 */[true,    'URI_HOST', 'URI Host', 'string', 1, 270, 'localhost' ],
-      /*  6 */[false,   'LOCATION_PATH', 'Location Path', 'string', 1, 270, ],
-      /*  7 */[true,    'URI_PORT', 'URI Port', 'uint', 0, 2, ],
-      /*  9 */[false,   'LOCATION_QUERY', 'Location Query', 'string', 1, 270, ],
-      /*  8 */[true,    'URI_PATH', 'URI Path', 'string', 1, 270, ],
+      /*  1 */[true,    'Content-Type', 'usigned', 0, 2, ],
+      /*  2 */[false,   'Max-Age', 'unsigned', 0, 4, 60],
+      /*  3 */[true,    'Proxy-Uri', 'string', 1, 270, ],
+      /*  4 */[false,   'ETag', 'opaque', 1, 8, ],
+      /*  5 */[true,    'Uri-Host', 'string', 1, 270, 'localhost' ],
+      /*  6 */[false,   'Location-Path', 'string', 1, 270, ],
+      /*  7 */[true,    'Uri-Port', 'uint', 0, 2, ],
+      /*  9 */[false,   'Location-Query', 'string', 1, 270, ],
+      /*  8 */[true,    'Uri-Path', 'string', 1, 270, ],
       /* 10 */[ /* reserved */ ],
-      /* 11 */[true,    'TOKEN', 'Token', 'opaque', 1, 8, ],
-      /* 12 */[false,   'ACCEPT', 'Accept', 'uint', 0, 2, ],
-      /* 13 */[true,    'MATCH', 'If Match', 'opaque', 1, 270, ],
+      /* 11 */[true,    'Token', 'opaque', 1, 8, ],
+      /* 12 */[false,   'Accept', 'uint', 0, 2, ],
+      /* 13 */[true,    'If-Match', 'opaque', 1, 270, ],
       /* 14 */[ /* reserved */ ],
-      /* 15 */[true,    'URI_QUERY', 'URI Query', 'string', 1, 270, ]
+      /* 15 */[true,    'Uri-Query', 'string', 1, 270, ]
       /* 16 - 20 */ [], [], [], [], [], /* reserved */
-      /* 21 */[true,    'NONE_MATCH', 'If None Match', , 0, , ] //TODO: check?
+      /* 21 */[true,    'If-None-Match', , 0, , ] //TODO: check?
     ],
     desc: { // almost direct implementation of Table 1
       isCritical:       function(n) { return opt.arry[n][0]; },
       //XXX: would this be kindda optimized and how can I check?
       isCriticalAlt:    function(n) { return n%2 ? true : false; },
-      shortName:        function(n) { return opt.arry[n][1]; },
-      longName:         function(n) { return opt.arry[n][2]; },
-      dataType:         function(n) { return opt.arry[n][3]; },
-      minLenght:        function(n) { return opt.arry[n][4]; },
-      maxLength:        function(n) { return opt.arry[n][5]; },
-      defaultValue:     function(n) { return opt.arry[n][6]; },
+      optionName:       function(n) { return opt.arry[n][1]; },
+      dataType:         function(n) { return opt.arry[n][2]; },
+      minLenght:        function(n) { return opt.arry[n][3]; },
+      maxLength:        function(n) { return opt.arry[n][4]; },
+      defaultValue:     function(n) { return opt.arry[n][5]; },
       lookup: {}
     },
   }
