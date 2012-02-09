@@ -42,27 +42,14 @@ module.exports = new function () {
           } else { return false; }
         } else { return false; }
       },
-      template: function() { return opt.template; },
       lookup: {}
-    },
-    template: {}
+    }
   }
 
   for (var o in opt.arry) {
     if (opt.arry[o][1]) {
       opt.desc.lookup[opt.arry[o][1]]=o;
     }
-    if (opt.arry[o][6]) {
-      opt.template[opt.arry[o][1]]=[];
-    } else {
-      switch (opt.desc.dataType) {
-        case 'uint':
-          opt.template[opt.arry[o][1]] = opt.arry[o][5] || 0;
-          break;
-        default:
-          opt.template[opt.arry[o][1]] = opt.arry[o][5] || "";
-          break;
-      }
   }
 
   return opt.desc;
