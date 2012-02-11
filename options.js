@@ -15,11 +15,11 @@ module.exports = ( function () {
       /*  7 */[true,    'Uri-Port', 'uint', 0, 2, 5683,        false],
       /*  9 */[false,   'Location-Query', 'string', 1, 270, ,   true],
       /*  8 */[true,    'Uri-Path', 'string', 1, 270, ,         true],
-      /* 10 */[ /* reserved */ ],
+      /* 10 */[false,   'Observe', 'uint', 0, 2, , ], ///Check!!!
       /* 11 */[true,    'Token', 'opaque', 1, 8, ,             false],
       /* 12 */[false,   'Accept', 'uint', 0, 2, ,               true],
       /* 13 */[true,    'If-Match', 'opaque', 1, 270, ,         true],
-      /* 14 */[ /* reserved */ ],
+      /* 14 */[/* false,   'Fence-Port', 0, , , , */], //Check!!!
       /* 15 */[true,    'Uri-Query', 'string', 1, 270, ,        true],
       /* 16 - 20 */ [], [], [], [], [], /* reserved */
       /* 21 */[true,    'If-None-Match', , 0, , , /* check? */ false]
