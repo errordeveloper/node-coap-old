@@ -1,4 +1,4 @@
-module.exports = ( function (OptionsTable, debugHook) {
+module.exports = ( function (OptionsTable, ParserInerface, debugHook) {
 
   // var OptionsTable = require ('./options');
 
@@ -25,4 +25,4 @@ module.exports = ( function (OptionsTable, debugHook) {
     }
   }
 
-  return agregate.setters; } (COAP.OptionsTable, COAP.debugHook) );
+  return agregate.setters; } (COAP.OptionsTable, COAP.ParserInerface, COAP.debugHook) );
