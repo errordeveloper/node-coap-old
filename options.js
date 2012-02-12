@@ -6,8 +6,8 @@ module.exports = ( function () {
 
     table: [
       /*  0 */[ /* no-op */ ],
-      /*  1 */[true,    'Content-Type', 'usigned', 0, 2, ,     false],
-      /*  2 */[false,   'Max-Age', 'unsigned', 0, 4, 60,       false],
+      /*  1 */[true,    'Content-Type', 'uint', 0, 2, ,        false],
+      /*  2 */[false,   'Max-Age', 'uint', 0, 4, 60,           false],
       /*  3 */[true,    'Proxy-Uri', 'string', 1, 270, ,        true],
       /*  4 */[false,   'ETag', 'opaque', 1, 8, ,              false],
       /*  5 */[true,    'Uri-Host', 'string', 1, 270, ,        false],
