@@ -43,9 +43,42 @@ module.exports = ( function () {
           } else { return false; }
         } else { return false; }
       },
-      byName: {}
+      byName: {
+        isCritical: function (optionName)
+        {
+          return options.getters.isCritical(options.getters.byName(optionName));
+        },
+        isCriticalAlt: function (optionName)
+        {
+          return options.getters.isCriticalAlt(options.getters.byName(optionName));
+        },
+        dataType: function (optionName)
+        {
+          return options.getters.dataType(options.getters.byName(optionName));
+        },
+        minLenght: function (optionName)
+        {
+          return options.getters.minLenght(options.getters.byName(optionName));
+        },
+        maxLenght: function (optionName)
+        {
+          return options.getters.maxLenght(options.getters.byName(optionName));
+        },
+        defaultValue: function (optionName)
+        {
+          return options.getters.defaultValue(options.getters.byName(optionName));
+        },
+        allowMultiple: function (optionName)
+        {
+          return options.getters.allowMultiple(options.getters.byName(optionName));
+        },
+        isDefined: function (optionName)
+        {
+          return options.getters.isDefined(options.getters.byName(optionName));
+        }
+      }
     }
-  }
+  };
 
   for (var n in options.table) {
     if (options.table[n][1]) {
