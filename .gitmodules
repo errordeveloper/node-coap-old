@@ -7,3 +7,6 @@
 [submodule "import/coapy"]
 	path = import/coapy
 	url = git://coapy.git.sourceforge.net/gitroot/coapy/coapy
+[submodule "import/californium"]
+	path = import/californium
+	url = git://github.com/mkovatsc/Californium.git
