@@ -38,7 +38,7 @@ module.exports = ( function () {
       isDefined:        function(n)
       {
         if (n in options.table) {
-          if (options.table[n][0] || !options.table[n][0]) {
+          if (options.table[n].length === 7) {
             return true;
           } else { return false; }
         } else { return false; }
