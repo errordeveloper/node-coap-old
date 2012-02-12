@@ -1,27 +1,42 @@
-var dgram = require ('dgram');
-var inspect = require ('util').inspect;
-var server = dgram.createSocket ('udp6');
+module.exports = function (config) {
 
-COAP = {
-  defaultPort : 5683,
-  debugHook : function (reference, object)
-  { console.log(reference+inspect(object)); } };
+  var dgram = require ('dgram');
+  var socket = dgram.createSocket ('udp6');
+  
+  var COAP = {
+    setup: {
+      port: config.port || 5683
+    },
+    stack: {
+      /* It's better to create the stack in one place. */
+    },
+    hooks: {
+      debug: config.debugHook
+    }
+  };
+  
+  var port = config.port || COAP.defaultPort;
+  /* The actual stack is create here! */
+  COAP.stack.EventEmitter = new (require ('events').EventEmitter)();
+  COAP.stack.OptionsTable = require  ('./options');
+  COAP.stack.ParseHeaders = require  ('./headers');
+  COAP.stack.ParseMessage = require  ('./message')(COAP.stack, COAP.hooks);
 
-COAP.OptionsTable = require  ('./options');
-COAP.ParseMessage = require  ('./message');
-COAP.ParseHeaders = require  ('./headers');
+  socket.on ('message', COAP.stack.ParseMessage);
+  
+  socket.bind(COAP.setup.port);
 
-server.on ('message', COAP.ParseMessage);
+  COAP.stack.EventEmitter.on('talkback', function (obj) {
+    console.log('Hello, '+obj.hello);
+  });
 
-/*
-server.on ('message', function (buffer, info) {
-  console.log ('<= '+info.address+':'+info.port+' ['+inspect(buffer)+']');
-  var request = COAP.ParseMessage(buffer, info);
-});
-*/
+  return {
+    /* events: {
+      on: COAP.stack.EventEmitter.on,
+      emit: COAP.stack.EventEmitter.emit
+            },*/
+    events: COAP.stack.EventEmitter,
+    option: COAP.stack.OptionsTable,
+  };
 
-server.on ('listening', function () {
-  console.log ('=+ '+server.address().address+':'+server.address().port);
-});
-
-server.bind(COAP.defaultPort);
+};

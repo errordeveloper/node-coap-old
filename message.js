@@ -1,4 +1,4 @@
-module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
+module.exports = ( function (stack, hooks) {
 
   var agregate = {
 
@@ -6,7 +6,7 @@ module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
 
     parse: function (messageBuffer, requestInfo) {
 
-      var request = COAP.ParseHeaders(messageBuffer, requestInfo);
+      var request = stack.ParseHeaders(messageBuffer, requestInfo);
 
       /* Storing by `[IP][TID]` seems natural, however
        * the IPs may change and a hijack is possible!
@@ -14,7 +14,6 @@ module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
       request.options = agregate.addTransaction(requestInfo.address, requestInfo.port, request.transactionID);
 
       var n = request.optionsCount;
-
 
       while (0 < n--) {
 
@@ -31,11 +30,12 @@ module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
         option.end = option.start + option.length;
 
         agregate.appendOption(request.options, option.type,
-            request.payload.slice(option.start, option.end));
+            request.payload.slice(option.start, option.end),
+            stack.OptionsTable);
 
         request.payload = request.payload.slice(option.end);
       }
-      return request; // Perhaps we should emit instead :)
+      stack.EventEmitter.emit('request', request); // Perhaps we should emit instead :)
     },
     addTransaction: function (source, port, transactionID) {
 
@@ -55,7 +55,7 @@ module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
 
       return agregate.container[source][port][transactionID]; // just a shortcut
     },
-    appendOption: function (optionsContainer, option, code) {
+    appendOption: function (optionsContainer, option, code, OptionsTable) {
 
       /* We probably don't want to create a global state
        * variable really, so store the options here and
@@ -91,13 +91,13 @@ module.exports = ( function (ParseHeaders, OptionsTable, debugHook) {
           optionsContainer[OptionsTable.getName(option)] = data;
         }
       } else { throw new Error("COAP Option "+option+" is not defined!"); }
-      if (debugHook) {
-        debugHook('agregate.container = ',
+      if (hooks.debug) {
+        hooks.debug('agregate.container = ',
             agregate.container);
-        debugHook('agregate.container[source][port][transaction] = ',
+        hooks.debug('agregate.container[source][port][transaction] = ',
             optionsContainer);
       }
     }
   }
 
-  return agregate.parse; } (COAP.ParseHeaders, COAP.OptionsTable, COAP.debugHook) );
+  return agregate.parse; } );

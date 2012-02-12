@@ -1,4 +1,4 @@
-module.exports = (function (debugHook) {
+module.exports = (function () {
 
   var headers = {
     table: {
