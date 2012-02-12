@@ -7,7 +7,8 @@ module.exports = (function (debugHook) {
     },
 
     getters: {
-      parse: function (buffer) { return {
+      parse: function (buffer, info) { return {
+        origin: info,
         // first byte: version, type, and option count
         protocolVersion:
            ((buffer[0] & 0xC0) >>> 6),
