@@ -24,7 +24,7 @@ exports['Equivalence mapping'] = function (test) {
 
 var rand = []
 rand.push(helper.randomOptionName());
-exports['Equivalence mapping `isDefined` `'+rand[0]+'` (random)'] = function (test) {
+exports['Equivalence mapping for `isDefined` on `'+rand[0]+'` (random)'] = function (test) {
 
   test.equal( Encoder.isDefined(rand[0]),
               Decoder.isDefined(Encoder.getNumber(rand[0])) );
@@ -32,7 +32,7 @@ exports['Equivalence mapping `isDefined` `'+rand[0]+'` (random)'] = function (te
   test.done(); };
 
 rand.push(helper.randomOptionName());
-exports['Equivalence mapping `isCritical` `'+rand[1]+'` (random)'] = function (test) {
+exports['Equivalence mapping for `isCritical` on `'+rand[1]+'` (random)'] = function (test) {
 
   test.equal( Encoder.isCritical(rand[1]),
               Decoder.isCritical(Encoder.getNumber(rand[1])) );

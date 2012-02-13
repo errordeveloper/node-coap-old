@@ -38,7 +38,6 @@ module.exports = ( function () {
       isDefined:        function(n)
       {
         if (n in options.table) {
-          console.log('options.table['+n+'].length: '+options.table[n].length);
           if (options.table[n].length === 7) {
             return true;
           } else { return false; }
