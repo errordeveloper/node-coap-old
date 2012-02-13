@@ -11,7 +11,7 @@ module.exports = function (config) {
       /* It's better to create the stack in one place. */
     },
     hooks: {
-      debug: config.debugHook
+      debug: config.debugHook || false
     }
   };
   
