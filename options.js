@@ -1,4 +1,4 @@
-// 5.10.  optionsion table (Draft 08)
+// 5.10. Options (Draft 08)
 
 module.exports = ( function () {
 
@@ -15,7 +15,7 @@ module.exports = ( function () {
       /*  7 */[true,    'Uri-Port', 'uint', 0, 2, 5683,        false],
       /*  9 */[false,   'Location-Query', 'string', 1, 270, ,   true],
       /*  8 */[true,    'Uri-Path', 'string', 1, 270, ,         true],
-      /* 10 */[false,   'Observe', 'uint', 0, 2, , ], ///Check!!!
+      /* 10 */[false,   'Observe', 'uint', 0, 2, , undefined], ///Check!!!
       /* 11 */[true,    'Token', 'opaque', 1, 8, ,             false],
       /* 12 */[false,   'Accept', 'uint', 0, 2, ,               true],
       /* 13 */[true,    'If-Match', 'opaque', 1, 270, ,         true],
@@ -25,7 +25,7 @@ module.exports = ( function () {
       /* 21 */[true,    'If-None-Match', , 0, , , /* check? */ false]
     ],
 
-    getters: { // almost direct implementation of Table 1
+    decoder: { // almost direct implementation of Table 1
       isCritical:       function(n) { return options.table[n][0]; },
       //XXX: would this be kindda optionsimized and how can I check?
       isCriticalAlt:    function(n) { return n%2 ? true : false; },
@@ -38,52 +38,37 @@ module.exports = ( function () {
       isDefined:        function(n)
       {
         if (n in options.table) {
+          console.log('options.table['+n+'].length: '+options.table[n].length);
           if (options.table[n].length === 7) {
             return true;
           } else { return false; }
         } else { return false; }
       },
-      byName: {
-        isCritical: function (optionName)
-        {
-          return options.getters.isCritical(options.getters.byName(optionName));
-        },
-        isCriticalAlt: function (optionName)
-        {
-          return options.getters.isCriticalAlt(options.getters.byName(optionName));
-        },
-        dataType: function (optionName)
-        {
-          return options.getters.dataType(options.getters.byName(optionName));
-        },
-        minLenght: function (optionName)
-        {
-          return options.getters.minLenght(options.getters.byName(optionName));
-        },
-        maxLenght: function (optionName)
-        {
-          return options.getters.maxLenght(options.getters.byName(optionName));
-        },
-        defaultValue: function (optionName)
-        {
-          return options.getters.defaultValue(options.getters.byName(optionName));
-        },
-        allowMultiple: function (optionName)
-        {
-          return options.getters.allowMultiple(options.getters.byName(optionName));
-        },
-        isDefined: function (optionName)
-        {
-          return options.getters.isDefined(options.getters.byName(optionName));
-        }
+    },
+    encoder: {
+      isCritical:       function (optionName) { return options.encoder[optionName][0]; },
+      //XXX: `getName` is 999% pointless here! However, `getNumber` is good for testing.
+      getNumber:        function (optionName) { return options.options[optionName]; },
+      dataType:         function (optionName) { return options.encoder[optionName][2]; },
+      minLenght:        function (optionName) { return options.encoder[optionName][3]; },
+      maxLenght:        function (optionName) { return options.encoder[optionName][4]; },
+      defaultValue:     function (optionName) { return options.encoder[optionName][5]; },
+      allowMultiple:    function (optionName) { return options.encoder[optionName][6]; },
+      //XXX: that's probably redundant, but for the completnes sake!
+      isDefined:        function (optionName)
+      {
+        return options.encoder.hasOwnProperty(optionName);
       }
-    }
+    },
+    options: {} // this used to store the map for `getNumber`
   };
 
+  // build reverse mapping table for encoding
   for (var n in options.table) {
     if (options.table[n][1]) {
-      options.getters.byName[options.table[n][1]]=n;
+      options.encoder[options.table[n][1]]=options.table[n];
+      options.options[options.table[n][1]]=n;
     }
   }
 
-  return options.getters; } () );
+  return { encode: options.encoder, decode: options.decoder }; } () );
