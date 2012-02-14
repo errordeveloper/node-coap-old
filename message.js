@@ -6,7 +6,7 @@ module.exports = ( function (stack, hooks) {
 
     parse: function (messageBuffer, requestInfo) {
 
-      var request = stack.ParseHeaders(messageBuffer, requestInfo);
+      var request = stack.ParseHeaders.decode(messageBuffer, requestInfo);
 
       /* Storing by `[IP][TID]` seems natural, however
        * the IPs may change and a hijack is possible!
@@ -31,7 +31,7 @@ module.exports = ( function (stack, hooks) {
 
         agregate.appendOption(request.options, option.type,
             request.payload.slice(option.start, option.end),
-            stack.OptionsTable);
+            stack.OptionsTable.decode);
 
         request.payload = request.payload.slice(option.end);
       }
