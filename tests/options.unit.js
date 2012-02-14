@@ -20,47 +20,35 @@ exports['Equivalence mapping'] = function (test) {
   test.equal( Encoder.isDefined('ETag'),
               Decoder.isDefined(Encoder.getNumber('ETag')) );
 
-  test.done(); };
+  var rand = []
 
-var rand = []
-rand.push(helper.randomOptionName());
-exports['Equivalence mapping for `isDefined` on `'+rand[0]+'` (random)'] = function (test) {
+  rand.push(helper.randomOptionName());
 
   test.equal( Encoder.isDefined(rand[0]),
-              Decoder.isDefined(Encoder.getNumber(rand[0])) );
+              Decoder.isDefined(Encoder.getNumber(rand[0])),
+              '... for `isDefined` on `'+rand[0]+'` (random)');
 
-  test.done(); };
 
-rand.push(helper.randomOptionName());
-exports['Equivalence mapping for `isCritical` on `'+rand[1]+'` (random)'] = function (test) {
-
+  rand.push(helper.randomOptionName());
   test.equal( Encoder.isCritical(rand[1]),
-              Decoder.isCritical(Encoder.getNumber(rand[1])) );
+              Decoder.isCritical(Encoder.getNumber(rand[1])),
+              'Equivalence mapping for `isCritical` on `'+rand[1]+'` (random)');
 
-  test.done(); };
-
-rand.push(helper.randomOptionName());
-exports['Equivalence mapping for `isCriticalAlt` on `'+rand[2]+'` (random)'] = function (test) {
-
+  rand.push(helper.randomOptionName());
   test.equal( Encoder.isCritical(rand[2]),
-              Decoder.isCriticalAlt(Encoder.getNumber(rand[2])) );
+              Decoder.isCriticalAlt(Encoder.getNumber(rand[2])),
+              'Equivalence mapping for `isCriticalAlt` on `'+rand[2]+'` (random)');
 
-  test.done(); };
-
-rand.push(helper.randomOptionName());
-exports['Equivalence mapping for `dataType` on `'+rand[3]+'` (random)'] = function (test) {
-
+  rand.push(helper.randomOptionName());
   test.equal( Encoder.dataType(rand[3]),
-              Decoder.dataType(Encoder.getNumber(rand[3])) );
+              Decoder.dataType(Encoder.getNumber(rand[3])),
+              'Equivalence mapping for `dataType` on `'+rand[3]+'` (random)');
 
-  test.done(); };
-
-rand.push(helper.randomOptionName());
-exports['Equivalence mapping for `allowMultiple` on `'+rand[4]+'` (random)'] = function (test) {
-
+  rand.push(helper.randomOptionName());
   test.equal( Encoder.allowMultiple(rand[4]),
-              Decoder.allowMultiple(Encoder.getNumber(rand[4])) );
+              Decoder.allowMultiple(Encoder.getNumber(rand[4])),
+              'Equivalence mapping for `allowMultiple` on `'+rand[4]+'` (random)');
+
+  console.log('Random option names tested: ['+rand.join(', ')+']');
 
   test.done(); };
-
-console.log('Random option names in order: ['+rand.join(', ')+']');
