@@ -32,7 +32,7 @@ module.exports = ( function () {
       getName:          function(n) { return options.table[n][1]; },
       dataType:         function(n) { return options.table[n][2]; },
       minLenght:        function(n) { return options.table[n][3]; },
-      maxLength:        function(n) { return options.table[n][4]; },
+      maxLenght:        function(n) { return options.table[n][4]; },
       defaultValue:     function(n) { return options.table[n][5]; },
       allowMultiple:    function(n) { return options.table[n][6]; },
       isDefined:        function(n)
