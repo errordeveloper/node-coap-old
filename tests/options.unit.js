@@ -52,3 +52,114 @@ exports['Equivalence mapping'] = function (test) {
   console.log('Random option names tested: ['+rand.join(', ')+']');
 
   test.done(); };
+
+exports['Methods exposed'] = function (test) {
+
+  test.ok(OptionsTable.hasOwnProperty('encode'),
+      '`OptionsTable` should have an `encode` method!`');
+  test.ok(OptionsTable.hasOwnProperty('decode'),
+      '`OptionsTable` should have a `decode` method!`');
+
+  test.ok(!Decoder.hasOwnProperty('decode'));
+  test.ok(!Decoder.hasOwnProperty('encode'));
+  test.ok(!Encoder.hasOwnProperty('decode'));
+  test.ok(!Encoder.hasOwnProperty('encode'));
+
+  var encoderKeys = Object.keys(Encoder);
+  var decoderKeys = Object.keys(Decoder);
+
+  var common = [];
+
+  //for (var p in encoderKeys) {
+  //  if (typeof Encoder[encoderKeys[p]] === 'function') {
+  //    encoderMethods++;
+  //    if (typeof Decoder[encoderKeys[p]] === 'function') {
+  //      common++;
+  //    }
+  //  }
+  //}
+  
+  console.log('Checking `Encoder` for the methods which `Decoder` has defined:');
+  for (var d in decoderKeys) {
+    if (typeof Decoder[decoderKeys[d]] === 'function') {
+      switch (decoderKeys[d]) {
+
+        case 'isCritical':
+        case 'minLenght':
+        case 'maxLenght':
+        case 'defaultValue':
+        case 'dataType':
+        case 'allowMultiple':
+        case 'isDefined':
+          console.log('+ `'+decoderKeys[d]+'`');
+          test.ok(Encoder.hasOwnProperty(decoderKeys[d]),
+              'The `Encoder` should have method `'+decoderKeys[d]+'` '+
+              'which is exposed by the `Decoder`!');
+          common.push(decoderKeys[d]);
+          break;
+
+        case 'isCriticalAlt':
+        case 'getName':
+          console.log('- `'+decoderKeys[d]+'`');
+          test.equal(Encoder.hasOwnProperty(decoderKeys[d]), false,
+              'The `Encoder` should not have method `'+decoderKeys[d]+'` '+
+              'which is exposed by the `Decoder`!');
+          break;
+
+        default:
+          console.log('New method `'+decoderKeys[d]+'` implemented by the `Decoder`?');
+          break;
+
+      }
+    }
+  }
+
+  console.log('Checking `Decoder` for the methods which `Encoder` has defined:');
+  for (var d in encoderKeys) {
+    if (typeof Encoder[encoderKeys[d]] === 'function') {
+      switch (encoderKeys[d]) {
+
+        case 'isCritical':
+        case 'minLenght':
+        case 'maxLenght':
+        case 'defaultValue':
+        case 'dataType':
+        case 'allowMultiple':
+        case 'isDefined':
+          console.log('+ `'+encoderKeys[d]+'`');
+          test.ok(Decoder.hasOwnProperty(encoderKeys[d]),
+              'The `Encoder` should have method `'+encoderKeys[d]+'` '+
+              'which is exposed by the `Decoder`!');
+          /* This doesn't work?
+          if (!encoderKeys[d] in common) {
+            throw new Error('Test code is invalid!');
+          };*/
+          break;
+
+        case 'getNumber':
+          console.log('- `'+encoderKeys[d]+'`');
+          test.equal(Decoder.hasOwnProperty(encoderKeys[d]), false,
+              'The `Decoder` should not have method `'+encoderKeys[d]+'` '+
+              'which is exposed by the `Decoder`!');
+          break;
+
+        default:
+          console.log('New method `'+encoderKeys[d]+'` implemented by the `Encoder`?');
+          break;
+
+      }
+    }
+  }
+
+  for (var d in encoderKeys) {
+    if (typeof Encoder[encoderKeys[d]] === 'object') {
+      for (var p in common) {
+        test.equal(Decoder[common[p]](Encoder.getNumber(encoderKeys[d])),
+                   Encoder[common[p]](encoderKeys[d]),
+                   'Common method must all work fine!');
+
+      }
+    }
+  }
+    
+  test.done(); }
