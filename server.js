@@ -22,7 +22,7 @@ module.exports = function (config) {
   COAP.stack.ParseHeaders = require  ('./headers');
   COAP.stack.ParseMessage = require  ('./message')(COAP.stack, COAP.hooks);
 
-  socket.on ('message', COAP.stack.ParseMessage);
+  socket.on ('message', COAP.stack.ParseMessage.decode);
   
   socket.bind(COAP.setup.port);
 

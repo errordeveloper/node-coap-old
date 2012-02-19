@@ -23,17 +23,7 @@ module.exports = (function () {
     encodeMethods: { 'GET':1, 'POST':2, 'PUT':3, 'DELETE':4 },
     encodeTypes: { 'CON':0, 'NON':1, 'ACK':2, 'RST':3 },
     encoder: function (request) {
-      /* er-coap-07.c @ f71b0bc :
-      * 500: ((coap_packet_t *)packet)->buffer[0]  = 0x00;
-      * 501: ((coap_packet_t *)packet)->buffer[0] |= COAP_HEADER_VERSION_MASK & (((coap_packet_t *)packet)->version)<<COAP_HEADER_VERSION_POSITION;
-      * 502: ((coap_packet_t *)packet)->buffer[0] |= COAP_HEADER_TYPE_MASK & (((coap_packet_t *)packet)->type)<<COAP_HEADER_TYPE_POSITION;
-      * 503: ((coap_packet_t *)packet)->buffer[0] |= COAP_HEADER_OPTION_COUNT_MASK & (((coap_packet_t *)packet)->option_count)<<COAP_HEADER_OPTION_COUNT_POSITION;
-      * 504: ((coap_packet_t *)packet)->buffer[1] = ((coap_packet_t *)packet)->code;
-      * 505: ((coap_packet_t *)packet)->buffer[2] = 0xFF & (((coap_packet_t *)packet)->tid)>>8;
-      * 506: ((coap_packet_t *)packet)->buffer[3] = 0xFF & ((coap_packet_t *)packet)->tid;
-      */
-
-      // BEWARE: OPTIMIZED FOR SPEED
+      // BEWARE:
       // The upper layer should provide us a consistent request.
       // * It _does not_ check for properties in the request!
       request.payload[0] = 0x00;
@@ -45,6 +35,6 @@ module.exports = (function () {
       request.payload[3] = (0xFF & (request.transactionID));
 
       return request.payload; }
-  }
+  };
     
   return { encode: headers.encoder, decode: headers.decoder }; } () );

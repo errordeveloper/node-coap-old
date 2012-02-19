@@ -4,7 +4,14 @@ module.exports = ( function (stack, hooks) {
 
     container: {},
 
-    parse: function (messageBuffer, requestInfo) {
+    encoder: function () {
+
+      var buffer = [];
+      buffer[0] |= type << 4;
+      buffer[0] |= length & 0x0F;
+
+    },
+    decoder: function (messageBuffer, requestInfo) {
 
       var request = stack.ParseHeaders.decode(messageBuffer, requestInfo);
 
@@ -98,6 +105,6 @@ module.exports = ( function (stack, hooks) {
             optionsContainer);
       }
     }
-  }
+  };
 
-  return agregate.parse; } );
+  return { encode: agregate.encoder, decode: agregate.decoder }; } );
