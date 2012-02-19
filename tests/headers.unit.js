@@ -61,11 +61,11 @@ exports['Equivalence mapping'] = function (test) {
 
   test.done();
 
-}
+};
 
 exports['Methods exposed'] = function (test) {
 
   test.ok(HeaderParser.hasOwnProperty('encode'));
   test.ok(HeaderParser.hasOwnProperty('decode'));
 
-  test.done(); }
+  test.done(); };

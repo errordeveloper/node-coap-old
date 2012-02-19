@@ -20,7 +20,7 @@ exports['Equivalence mapping'] = function (test) {
   test.equal( Encoder.isDefined('ETag'),
               Decoder.isDefined(Encoder.getNumber('ETag')) );
 
-  var rand = []
+  var rand = [];
 
   rand.push(helper.randomOptionName());
 
