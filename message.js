@@ -24,11 +24,11 @@ module.exports = ( function (stack, hooks) {
 
       var n = request.optionsCount;
 
-      var option = {};
+      var option = {type: 0};
       while (0 < n--) {
 
         option.start = 1;
-        option.type = ((request.payload[0] & 0xF0) >>> 4);
+        option.type += (request.payload[0] >>> 4);
         option.length = (request.payload[0] & 0x0F);
 
         if (option.type !== 0) {
