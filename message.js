@@ -6,9 +6,11 @@ module.exports = ( function (stack, hooks) {
 
     encoder: function () {
 
+      /*
       var buffer = [];
       buffer[0] |= type << 4;
       buffer[0] |= length & 0x0F;
+      */
 
     },
     decoder: function (messageBuffer, requestInfo) {
@@ -80,15 +82,17 @@ module.exports = ( function (stack, hooks) {
        * }, OptionsTable['Max-Age']*1000);
        */
 
+      var data;
+
       switch (OptionsTable.dataType(option)) {
         case 'uint':
-          var data = code.readUInt8(0);
+          data = code.readUInt8(0);
           break;
         case 'string':
-          var data = code.toString(0);
+          data = code.toString(0);
           break;
         case 'opaque':
-          var data = new Buffer(code.length);
+          data = new Buffer(code.length);
           code.copy(data);
           break;
       }
