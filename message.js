@@ -22,19 +22,25 @@ module.exports = ( function (stack, hooks) {
 
       var n = request.optionsCount;
 
+      var option = {};
       while (0 < n--) {
 
-        var option = {
-          start: 1,
-          type: (request.payload[0] >>> 4),
-          length: (request.payload[0] & 0x0F)
-        };
+        option.start = 1;
+        option.type = ((request.payload[0] & 0xF0) >>> 4);
+        option.length = (request.payload[0] & 0x0F);
+
+        if (option.type !== 0) {
+          option.delta = option.type;
+        } else {
+          option.type = option.delta;
+        }
 
         if (option.length === 15) {
-          console.log('Got a longer option ...');
           option.length += request.payload[option.start++];
         }
         option.end = option.start + option.length;
+
+        hooks.debug('option = ', option);
 
         agregate.appendOption(request.options, option.type,
             request.payload.slice(option.start, option.end),
@@ -89,7 +95,7 @@ module.exports = ( function (stack, hooks) {
 
       if (OptionsTable.isDefined(option)) {
         if (OptionsTable.allowMultiple(option)) {
-          if (!agregate.container.hasOwnProperty(OptionsTable.getName(option))) {
+          if (!optionsContainer.hasOwnProperty(OptionsTable.getName(option))) {
             optionsContainer[OptionsTable.getName(option)] = [data];
           } else {
             optionsContainer[OptionsTable.getName(option)].push(data);
