@@ -31,15 +31,10 @@ module.exports = ( function (stack, hooks) {
         option.type += (request.payload[0] >>> 4);
         option.length = (request.payload[0] & 0x0F);
 
-        if (option.type !== 0) {
-          option.delta = option.type;
-        } else {
-          option.type = option.delta;
-        }
-
         if (option.length === 15) {
           option.length += request.payload[option.start++];
         }
+
         option.end = option.start + option.length;
 
         hooks.debug('option = ', option);
