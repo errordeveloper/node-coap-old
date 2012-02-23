@@ -3,23 +3,15 @@ module.exports = ( function (stack, hooks) {
   var agregate = {
 
     container: {},
+    /* TODO: get rid of permanent container and any
+     * internal state, all that has to go elsewhere! */
 
     encoder: function () {
-
-      /*
-      var buffer = [];
-      buffer[0] |= type << 4;
-      buffer[0] |= length & 0x0F;
-      */
-
     },
     decoder: function (messageBuffer, requestInfo) {
 
       var request = stack.ParseHeaders.decode(messageBuffer, requestInfo);
 
-      /* Storing by `[IP][TID]` seems natural, however
-       * the IPs may change and a hijack is possible!
-       * TODO: can we overvome this flow somehow? */
       request.options = agregate.addTransaction(requestInfo.address, requestInfo.port, request.transactionID);
 
       var n = request.optionsCount;
@@ -66,16 +58,6 @@ module.exports = ( function (stack, hooks) {
       return agregate.container[source][port][transactionID]; // just a shortcut
     },
     appendOption: function (optionsContainer, option, code, OptionsTable) {
-
-      /* We probably don't want to create a global state
-       * variable really, so store the options here and
-       * may be we could actually forget them depending
-       * on `Max-Age` by doing this:
-       * setTimout(function forget () {
-       *   COAP.Hooks.AgregatorForgotten(container[source][transaction]);
-       *   container[source][transaction] = { };
-       * }, OptionsTable['Max-Age']*1000);
-       */
 
       var data;
 
