@@ -16,7 +16,7 @@ module.exports = function (config) {
   };
   
   var port = config.port || COAP.defaultPort;
-  /* The actual stack is create here! */
+  /* The actual stack is created here! */
   COAP.stack.EventEmitter = new (require ('events').EventEmitter)();
   COAP.stack.OptionsTable = require  ('./options');
   COAP.stack.ParseHeaders = require  ('./headers');
@@ -27,14 +27,10 @@ module.exports = function (config) {
   socket.bind(COAP.setup.port);
 
   COAP.stack.EventEmitter.on('talkback', function (obj) {
-    console.log('Hello, '+obj.hello);
+    console.log('talkback: '+obj.hello);
   });
 
   return {
-    /* events: {
-      on: COAP.stack.EventEmitter.on,
-      emit: COAP.stack.EventEmitter.emit
-            },*/
     events: COAP.stack.EventEmitter,
     option: COAP.stack.OptionsTable,
   };

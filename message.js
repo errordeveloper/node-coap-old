@@ -37,7 +37,7 @@ module.exports = ( function (stack, hooks) {
 
         request.payload = request.payload.slice(option.end);
       }
-      stack.EventEmitter.emit('request', request); // Perhaps we should emit instead :)
+      stack.EventEmitter.emit('request', request);
     },
     addTransaction: function (source, port, transactionID) {
 
