@@ -2,17 +2,15 @@ module.exports = ( function (stack, hooks) {
 
   var agregate = {
 
-    container: {},
-    /* TODO: get rid of permanent container and any
-     * internal state, all that has to go elsewhere! */
-
     encoder: function () {
     },
     decoder: function (messageBuffer, requestInfo) {
 
       var request = stack.ParseHeaders.decode(messageBuffer, requestInfo);
 
-      request.options = agregate.addTransaction(requestInfo.address, requestInfo.port, request.transactionID);
+      request.options = {};
+
+      hooks.debug('request.options = ', request.options);
 
       var n = request.optionsCount;
 
@@ -23,7 +21,7 @@ module.exports = ( function (stack, hooks) {
         option.type += (request.payload[0] >>> 4);
         option.length = (request.payload[0] & 0x0F);
 
-        if (option.length === 15) {
+        if (option.length === 0x0F) {
           option.length += request.payload[option.start++];
         }
 
@@ -39,25 +37,7 @@ module.exports = ( function (stack, hooks) {
       }
       stack.EventEmitter.emit('request', request);
     },
-    addTransaction: function (source, port, transactionID) {
-
-      // TODO:
-      // * size?
-      // * retrans?
-      // * timestamps?
-      if (!agregate.container.hasOwnProperty(source)) {
-        agregate.container[source] = { };
-      }
-      if (!agregate.container[source].hasOwnProperty(port)) {
-        agregate.container[source][port] = { };
-      }
-      if (!agregate.container[source][port].hasOwnProperty(transactionID)) {
-        agregate.container[source][port][transactionID] = { };
-      }
-
-      return agregate.container[source][port][transactionID]; // just a shortcut
-    },
-    appendOption: function (optionsContainer, option, code, OptionsTable) {
+    appendOption: function (requestOptions, option, code, OptionsTable) {
 
       var data;
 
@@ -76,20 +56,17 @@ module.exports = ( function (stack, hooks) {
 
       if (OptionsTable.isDefined(option)) {
         if (OptionsTable.allowMultiple(option)) {
-          if (!optionsContainer.hasOwnProperty(OptionsTable.getName(option))) {
-            optionsContainer[OptionsTable.getName(option)] = [data];
+          if (!requestOptions.hasOwnProperty(OptionsTable.getName(option))) {
+            requestOptions[OptionsTable.getName(option)] = [data];
           } else {
-            optionsContainer[OptionsTable.getName(option)].push(data);
+            requestOptions[OptionsTable.getName(option)].push(data);
           }
         } else {
-          optionsContainer[OptionsTable.getName(option)] = data;
+          requestOptions[OptionsTable.getName(option)] = data;
         }
       } else { throw new Error("COAP Option "+option+" is not defined!"); }
       if (hooks.debug) {
-        hooks.debug('agregate.container = ',
-            agregate.container);
-        hooks.debug('agregate.container[source][port][transaction] = ',
-            optionsContainer);
+        hooks.debug('requestOptions = ', requestOptions);
       }
     }
   };
