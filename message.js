@@ -10,7 +10,9 @@ module.exports = ( function (stack, hooks) {
 
       request.options = {};
 
-      hooks.debug('request.options = ', request.options);
+      if (hooks.stats) hooks.stats('messages', 1);
+      if (hooks.stats) hooks.stats('total_rx', requestInfo.size);
+      if (hooks.debug) hooks.debug('request.options = ', request.options);
 
       var n = request.optionsCount;
 
@@ -65,9 +67,7 @@ module.exports = ( function (stack, hooks) {
           requestOptions[OptionsTable.getName(option)] = data;
         }
       } else { throw new Error("COAP Option "+option+" is not defined!"); }
-      if (hooks.debug) {
-        hooks.debug('requestOptions = ', requestOptions);
-      }
+      if (hooks.debug) hooks.debug('requestOptions = ', requestOptions);
     }
   };
 
