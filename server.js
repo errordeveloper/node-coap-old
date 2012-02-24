@@ -1,15 +1,13 @@
-module.exports = function (hooks) {
+module.exports = ( function () {
 
-  var createServer = function createServer(callback) {
+  var createServer = function createServer(callback, hooks) {
 
     var COAP = {
       dgram: require ('dgram'),
       stack: {
         /* It's better to create the stack in one place. */
       },
-      hooks: {
-        debug: hooks.debug || false
-      }
+      hooks: hooks
     };
 
     /* The actual stack is created here! */
@@ -27,6 +25,8 @@ module.exports = function (hooks) {
     COAP.server = {
       listen: function (port, address) {
         socket.on('message', COAP.stack.ParseMessage.decode);
+
+
         if (port === undefined && address === undefined) {
           socket.bind(5683);
         } else {
@@ -48,7 +48,4 @@ module.exports = function (hooks) {
     };
   };
 
-  return {
-    createServer: createServer
-  };
-};
+  return { createServer: createServer }; } () );
