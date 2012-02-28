@@ -23,16 +23,25 @@ module.exports = ( function () {
     }
 
     COAP.server = {
-      listen: function (port, address) {
+      listen: function (port, address, callback) {
         socket.on('message', COAP.stack.ParseMessage.decode);
-
-
+        if (typeof callback === 'function') {
+          socket.on('listening', callback);
+        }
         if (port === undefined && address === undefined) {
           socket.bind(5683);
         } else {
           socket.bind(port, address);
         }
       },
+      respond: function (message) {
+        var socket = COAP.dgram.createSocket('udp6');
+        COAP.stack.ParseMessage.encode(message, function (buffer) {
+          socket.send(message, 0, message.length, client.address, client.port, function (err, bytes) {
+            if (err) { throw err; }
+            client.close();
+          });
+        }); },
       close: function () { socket.close(); }
     };
 
@@ -41,10 +50,11 @@ module.exports = ( function () {
     });
 
     return {
-      events: COAP.stack.EventEmitter,
-      option: COAP.stack.OptionsTable,
-      listen: COAP.server.listen,
-      close:  COAP.server.close,
+      events:   COAP.stack.EventEmitter,
+      option:   COAP.stack.OptionsTable,
+      listen:   COAP.server.listen,
+      respond:  COAP.server.respond,
+      close:    COAP.server.close,
     };
   };
 
