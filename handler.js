@@ -5,7 +5,7 @@ var coap = require ('./server');
 var stats = {};
 
 var debugHook = function (ref, obj) {
-  console.log(ref+util.inspect(obj));
+  console.log(ref+util.inspect(obj, true, null, true));
 };
 
 var statsHook = function (ref, inc) {
