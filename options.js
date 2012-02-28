@@ -6,21 +6,21 @@ module.exports = ( function () {
 
     table: [
       /*  0 */[ /* no-op */ ],
-      /*  1 */[true,    'Content-Type', 'uint', 0, 2, -1,      false],
-      /*  2 */[false,   'Max-Age', 'uint', 0, 4, 60,           false],
-      /*  3 */[true,    'Proxy-Uri', 'string', 1, 270, '',      true],
-      /*  4 */[false,   'ETag', 'opaque', 1, 8, '',            false],
-      /*  5 */[true,    'Uri-Host', 'string', 1, 270, '',      false],
-      /*  6 */[false,   'Location-Path', 'string', 1, 270, '',  true],
-      /*  7 */[true,    'Uri-Port', 'uint', 0, 2, 5683,        false],
-      /*  9 */[false,   'Location-Query', 'string', 1, 270, '', true],
-      /*  8 */[true,    'Uri-Path', 'string', 1, 270, '',       true],
-      /* 10 */[false,   'Observe', 'uint', 0, 2, -1, undefined], ///Check!!!
-      /* 11 */[true,    'Token', 'opaque', 1, 8, '',           false],
-      /* 12 */[false,   'Accept', 'uint', 0, 2, -1,             true],
-      /* 13 */[true,    'If-Match', 'opaque', 1, 270, '',       true],
+      /*  1 */[true,    'Content-Type', 'uint', 0, 2,       undefined,  false],
+      /*  2 */[false,   'Max-Age', 'uint', 0, 4,                   60,  false],
+      /*  3 */[true,    'Proxy-Uri', 'string', 1, 270,      undefined,   true],
+      /*  4 */[false,   'ETag', 'opaque', 1, 8,             undefined,  false],
+      /*  5 */[true,    'Uri-Host', 'string', 1, 270,       undefined,  false],
+      /*  6 */[false,   'Location-Path', 'string', 1, 270,  undefined,   true],
+      /*  7 */[true,    'Uri-Port', 'uint', 0, 2,                5683,  false],
+      /*  9 */[false,   'Location-Query', 'string', 1, 270, undefined,   true],
+      /*  8 */[true,    'Uri-Path', 'string', 1, 270,       undefined,   true],
+      /* 10 */[false,   'Observe', 'uint', 0, 2,            undefined, undefined], ///Check!!!
+      /* 11 */[true,    'Token', 'opaque', 1, 8,            undefined,  false],
+      /* 12 */[false,   'Accept', 'uint', 0, 2,             undefined,   true],
+      /* 13 */[true,    'If-Match', 'opaque', 1, 270,       undefined,   true],
       /* 14 */[/* false,   'Fence-Port', 0, , , , */], //Check!!!
-      /* 15 */[true,    'Uri-Query', 'string', 1, 270, '',      true],
+      /* 15 */[true,    'Uri-Query', 'string', 1, 270,      undefined,   true],
       /* 16 - 20 */ [], [], [], [], [], /* reserved */
       /* 21 */[true,    'If-None-Match', , 0, , , /* check? */ false]
     ],
