@@ -1,7 +1,7 @@
 module.exports = (function () {
 
   var headers = {
-    decodeMethods: [ , 'GET', 'POST', 'PUT', 'DELETE' ],
+    decodeMethods: [ 'NOOP', 'GET', 'POST', 'PUT', 'DELETE' ],
     decodeTypes: [ 'CON', 'NON', 'ACK', 'RST' ],
     decoder: function (buffer, info) { return {
       origin: info,
@@ -36,7 +36,7 @@ module.exports = (function () {
       // third and forth byte: transaction ID (TID)
       request.payload[2] = (0xFF & (request.transactionID >> 8));
       request.payload[3] = (0xFF & (request.transactionID));
-
+      // We return from here, so that can be passed to `dgram.send()`
       return request.payload; }
   };
     

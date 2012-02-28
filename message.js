@@ -2,7 +2,8 @@ module.exports = ( function (stack, hooks) {
 
   var agregate = {
 
-    encoder: function () {
+    encoder: function (request, callback) {
+      callback(stack.ParseHeaders.encode(request));
     },
     decoder: function (messageBuffer, requestInfo) {
 
@@ -10,9 +11,9 @@ module.exports = ( function (stack, hooks) {
 
       request.options = {};
 
-      if (hooks.stats) hooks.stats('messages', 1);
-      if (hooks.stats) hooks.stats('total_rx', requestInfo.size);
-      if (hooks.debug) hooks.debug('request.options = ', request.options);
+      if (hooks.stats) { hooks.stats('messages', 1); }
+      if (hooks.stats) { hooks.stats('total_rx', requestInfo.size); }
+      if (hooks.debug) { hooks.debug('request.options = ', request.options); }
 
       var n = request.optionsCount;
 
@@ -29,7 +30,7 @@ module.exports = ( function (stack, hooks) {
 
         option.end = option.start + option.length;
 
-        hooks.debug('option = ', option);
+        if (hooks.debug) { hooks.debug('option = ', option); }
 
         agregate.appendOption(request.options, option.type,
             request.payload.slice(option.start, option.end),
@@ -67,7 +68,7 @@ module.exports = ( function (stack, hooks) {
           requestOptions[OptionsTable.getName(option)] = data;
         }
       } else { throw new Error("COAP Option "+option+" is not defined!"); }
-      if (hooks.debug) hooks.debug('requestOptions = ', requestOptions);
+      if (hooks.debug) { hooks.debug('requestOptions = ', requestOptions); }
     }
   };
 
