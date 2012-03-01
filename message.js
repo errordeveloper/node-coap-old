@@ -1,5 +1,7 @@
 module.exports = ( function (stack, hooks) {
 
+  var uint = require ('./buffers'); //XXX: does it need to be in `COAP.stack`?
+
   var agregate = {
 
     encoder: function (request, callback) {
@@ -34,19 +36,25 @@ module.exports = ( function (stack, hooks) {
 
         agregate.appendOption(request.options, option.type,
             request.payload.slice(option.start, option.end),
-            stack.OptionsTable.decode);
+            option.length, stack.OptionsTable.decode);
 
         request.payload = request.payload.slice(option.end);
       }
       stack.EventEmitter.emit('request', request);
     },
-    appendOption: function (requestOptions, option, code, OptionsTable) {
+    appendOption: function (requestOptions, option, code, length, OptionsTable) {
 
       var data;
 
       switch (OptionsTable.dataType(option)) {
         case 'uint':
-          data = code.readUInt8(0);
+          if (length === 0) {
+            data = 0;
+          } else if (length > 4 || length < 0) {
+            throw new Error("Unknow integer length ("+length+") for Option "+option+"!");
+          } else {
+            data = uint.read[length](code, 0);
+          }
           break;
         case 'string':
           data = code.toString(0);
