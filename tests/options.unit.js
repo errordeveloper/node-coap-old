@@ -85,8 +85,8 @@ exports['Methods exposed'] = function (test) {
       switch (decoderKeys[d]) {
 
         case 'isCritical':
-        case 'minLenght':
-        case 'maxLenght':
+        case 'minLength':
+        case 'maxLength':
         case 'defaultValue':
         case 'dataType':
         case 'allowMultiple':
@@ -120,8 +120,8 @@ exports['Methods exposed'] = function (test) {
       switch (encoderKeys[d]) {
 
         case 'isCritical':
-        case 'minLenght':
-        case 'maxLenght':
+        case 'minLength':
+        case 'maxLength':
         case 'defaultValue':
         case 'dataType':
         case 'allowMultiple':

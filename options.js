@@ -31,8 +31,8 @@ module.exports = ( function () {
       isCriticalAlt:    function(n) { return n%2 ? true : false; },
       getName:          function(n) { return options.table[n][1]; },
       dataType:         function(n) { return options.table[n][2]; },
-      minLenght:        function(n) { return options.table[n][3]; },
-      maxLenght:        function(n) { return options.table[n][4]; },
+      minLength:        function(n) { return options.table[n][3]; },
+      maxLength:        function(n) { return options.table[n][4]; },
       defaultValue:     function(n) { return options.table[n][5]; },
       allowMultiple:    function(n) { return options.table[n][6]; },
       isDefined:        function(n)
@@ -49,8 +49,8 @@ module.exports = ( function () {
       //XXX: `getName` is 999% pointless here! However, `getNumber` is good for testing.
       getNumber:        function (optionName) { return options.options[optionName]; },
       dataType:         function (optionName) { return options.encoder[optionName][2]; },
-      minLenght:        function (optionName) { return options.encoder[optionName][3]; },
-      maxLenght:        function (optionName) { return options.encoder[optionName][4]; },
+      minLength:        function (optionName) { return options.encoder[optionName][3]; },
+      maxLength:        function (optionName) { return options.encoder[optionName][4]; },
       defaultValue:     function (optionName) { return options.encoder[optionName][5]; },
       allowMultiple:    function (optionName) { return options.encoder[optionName][6]; },
       //XXX: that's probably redundant, but for the completnes sake!
