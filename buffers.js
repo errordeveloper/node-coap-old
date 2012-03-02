@@ -14,21 +14,25 @@ module.exports = ( function UnsignedUtils () {
     buffer[offset+1] = (value >>> 0x10) & 0xff;
     buffer[offset+2] = (value >>> 0x08) & 0xff;
     buffer[offset+3] = (value) & 0xff;
+    return offset+3;
   };
-
+ 
   write[3] = function write24(buffer, value, offset) {
     buffer[offset]     = (value >>> 0x10) & 0xff;
-    buffer[offset + 1] = (value >>> 0x08) & 0xff;
-    buffer[offset + 2] = (value) & 0xff;
+    buffer[offset+1] = (value >>> 0x08) & 0xff;
+    buffer[offset+2] = (value) & 0xff;
+    return offset+2;
   };
 
   write[2] = function write16(buffer, value, offset) {
     buffer[offset]   = (value >>> 0x08) & 0xff;
     buffer[offset+1] = (value) & 0xff;
+    return offset+1;
   };
 
   write[1] = function write8(buffer, value, offset) {
     buffer[offset] = (value) & 0xff;
+    return offset;
   };
 
   write[0] = undefined; //FIXME?
