@@ -1,4 +1,4 @@
-module.exports = ( function UnsignedUtils () {
+module.exports = ( function IntegerUtils () {
   /* The original purpose of this module was to add
    * a missing function to read/write 3 byte unsigned
    * integers to/from the buffers. It did evolve however

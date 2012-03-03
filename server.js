@@ -14,6 +14,7 @@ module.exports = ( function () {
     COAP.stack.EventEmitter = new (require ('events').EventEmitter)();
     COAP.stack.OptionsTable = require  ('./options');
     COAP.stack.ParseHeaders = require  ('./headers');
+    COAP.stack.IntegerUtils = require  ('./integer');
     COAP.stack.ParseMessage = require  ('./message')(COAP.stack, COAP.hooks);
 
     var socket = COAP.dgram.createSocket ('udp6');
