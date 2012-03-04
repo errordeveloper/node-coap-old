@@ -27,32 +27,67 @@ var encoder = function (request) {
 
   var payload = new Buffer(1152);
 
-  var n = 4;
+  var n = 4, // Offset
+      d = 0, // Delta
+      p = 0; // Previous
 
-  /* Get only those options which are now defined here */
+  function setOptionHeader(buffer, offset, delta, length) {
+    if (length < 15) {
+      buffer[offset] = (0x0F & length) | (0xF0 & delta << 4);
+      return 1;
+    } else {
+      buffer[offset] = 0x0F | (0xF0 & delta << 4);
+      buffer[offset+1] = 0xFF & (length - 15);
+      return 2;
+    }
+  }
+
+  /* Get only those options which are defined */
   for (var option in request.options.byNumber) {
+    d = option - p;
     console.log(OptionsTable.decode.getName(option)+
         ' = '+util.inspect(request.options.byNumber[option]));
     if (!OptionsTable.decode.allowMultiple(option)) {
       if (typeof request.options.byNumber[option] === 'object') {
         throw new Error("Malformed option in the `request` object!");
       } else if (request.options.byNumber[option].constructor === String) {
-        payload[n] = 0x00;
-        payload[n] |= (option << 4);
-        payload[n] |= 0x0F & Buffer.byteLength(request.options.byNumber[option]);
-        //TODO: extra bits in the length (i.e. < 0xFF)
-        n += payload.write(request.options.byNumber[option], ++n);
+        var length = Buffer.byteLength(request.options.byNumber[option]);
+        n += setOptionHeader(payload, n, d, length);
+        n += payload.write(request.options.byNumber[option], n);
       } else if (request.options.byNumber[option].constructor === Number) {
+        /* Using `maxLength` of the given option is the best decition. */
         var length = OptionsTable.decode.maxLength(option);
-        payload[n] = 0x00;
-        payload[n] |= (option << 4);
-        payload[n] |= 0x0F & length;
-        n += uint.write[length](payload, request.options.byNumber[option], ++n);
+        n += setOptionHeader(payload, n, d, length);
+        n += uint.write[length](payload, request.options.byNumber[option], n);
       } /* else {
         throw new Error("Unidentified option in the `request` object!");
       } */
     } else if (OptionsTable.decode.allowMultiple(option) &&
         request.options.byNumber[option].constructor === Array) {
+      for (var subopt in request.options.byNumber[option]) {
+        if (typeof request.options.byNumber[option][subopt] === 'object') {
+          throw new Error("Malformed option in the `request` object!");
+        } else if (request.options.byNumber[option][subopt].constructor === String) {
+          var length = Buffer.byteLength(request.options.byNumber[option][subopt]);
+          if (subopt == 0) {
+          n += setOptionHeader(payload, n, d, length);
+          } else {
+            n += setOptionHeader(payload, n, d, length);
+          }
+          n += payload.write(request.options.byNumber[option], n);
+        } else if (request.options.byNumber[option][subopt].constructor === Number) {
+          /* Using `maxLength` of the given option is the best decition. */
+          var length = OptionsTable.decode.maxLength(option);
+          if (subopt == 0) {
+            n += setOptionHeader(payload, n, d, length);
+          } else {
+            n += setOptionHeader(payload, n, d, length);
+          }
+          n += uint.write[length](payload, request.options.byNumber[option][subopt], n);
+        } /* else {
+          throw new Error("Unidentified option in the `request` object!");
+        } */
+      }
     }
   }
 
