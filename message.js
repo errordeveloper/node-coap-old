@@ -58,8 +58,7 @@ module.exports = ( function (stack, hooks) {
           data = code.toString(0);
           break;
         case 'opaque':
-          data = new Buffer(code.length);
-          code.copy(data);
+          data = code.toString(0);
           break;
       }
 

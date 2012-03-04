@@ -1,7 +1,7 @@
 var OptionsTable = require('./options');
 
 var util = require('util');
-var unit = require('./buffers');
+var uint = require('./integer');
 
 var encoder = function (request) {
 
@@ -48,9 +48,6 @@ var encoder = function (request) {
         payload[n] |= (option << 4);
         payload[n] |= 0x0F & length;
         n += uint.write[length](payload, request.options.byNumber[option], ++n);
-      } else if (request.options.byNumber[option].constructor === Buffer) {
-        //TODO: 1st make opaque  type a hex encoded string!
-        //TODO: extra bits in the length (i.e. < 0xFF)
       } /* else {
         throw new Error("Unidentified option in the `request` object!");
       } */
