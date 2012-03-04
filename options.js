@@ -12,7 +12,7 @@ module.exports = ( function () {
       /*  4 */[false,   'ETag', 'opaque', 1, 8,             undefined,  false],
       /*  5 */[true,    'Uri-Host', 'string', 1, 270,       undefined,  false],
       /*  6 */[false,   'Location-Path', 'string', 1, 270,  undefined,   true],
-      /*  7 */[true,    'Uri-Port', 'uint', 0, 2,                5683,  false],
+      /*  7 */[true,    'Uri-Port', 'uint', 0, 2,           undefined,  false],
       /*  9 */[false,   'Location-Query', 'string', 1, 270, undefined,   true],
       /*  8 */[true,    'Uri-Path', 'string', 1, 270,       undefined,   true],
       /* 10 */[false,   'Observe', 'uint', 0, 2,            undefined, undefined], ///Check!!!
