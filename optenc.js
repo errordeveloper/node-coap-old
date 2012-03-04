@@ -25,12 +25,6 @@ var encoder = function (request) {
     }
   }
 
-  var payload = new Buffer(1152);
-
-  var n = 4, // Offset
-      d = 0, // Delta
-      p = 0; // Previous
-
   function setOptionHeader(buffer, offset, delta, length) {
     if (length < 15) {
       buffer[offset] = (0x0F & length) | (0xF0 & delta << 4);
@@ -42,57 +36,47 @@ var encoder = function (request) {
     }
   }
 
-  /* Get only those options which are defined */
+  function setOption(buffer, offset, delta, data) {
+    if (typeof data === 'object') {
+      throw new Error("Malformed option in the `request` object!");
+    } else if (data.constructor === String) {
+      var length = Buffer.byteLength(data);
+      offset += setOptionHeader(buffer, offset, delta, length);
+      offset += buffer.write(data, offset);
+    } else if (data.constructor === Number) {
+      /* Using `maxLength` of the given option is the best decition. */
+      var length = OptionsTable.decode.maxLength(option);
+      offset += setOptionHeader(buffer, offset, delta, length);
+      offset += uint.write[length](buffer, data, offset);
+      return offset;
+    } else {
+      throw new Error("Unidentified option in the `request` object!");
+    }
+  }
+
+  var payload = new Buffer(1152);
+
+  var n = 4, // Offset
+      d = 0, // Delta
+      p = 0; // Previous
+
+  /* Iterate over sorted options */
   for (var option in request.options.byNumber) {
-    d = option - p;
-    console.log(OptionsTable.decode.getName(option)+
-        ' = '+util.inspect(request.options.byNumber[option]));
     if (!OptionsTable.decode.allowMultiple(option)) {
-      if (typeof request.options.byNumber[option] === 'object') {
-        throw new Error("Malformed option in the `request` object!");
-      } else if (request.options.byNumber[option].constructor === String) {
-        var length = Buffer.byteLength(request.options.byNumber[option]);
-        n += setOptionHeader(payload, n, d, length);
-        n += payload.write(request.options.byNumber[option], n);
-      } else if (request.options.byNumber[option].constructor === Number) {
-        /* Using `maxLength` of the given option is the best decition. */
-        var length = OptionsTable.decode.maxLength(option);
-        n += setOptionHeader(payload, n, d, length);
-        n += uint.write[length](payload, request.options.byNumber[option], n);
-      } /* else {
-        throw new Error("Unidentified option in the `request` object!");
-      } */
+      d = option - p; p = option;
+      n += setOption(payload, n, d, request.options.byNumber[option]);
     } else if (OptionsTable.decode.allowMultiple(option) &&
         request.options.byNumber[option].constructor === Array) {
       for (var subopt in request.options.byNumber[option]) {
-        if (typeof request.options.byNumber[option][subopt] === 'object') {
-          throw new Error("Malformed option in the `request` object!");
-        } else if (request.options.byNumber[option][subopt].constructor === String) {
-          var length = Buffer.byteLength(request.options.byNumber[option][subopt]);
-          if (subopt == 0) {
-          n += setOptionHeader(payload, n, d, length);
-          } else {
-            n += setOptionHeader(payload, n, d, length);
-          }
-          n += payload.write(request.options.byNumber[option], n);
-        } else if (request.options.byNumber[option][subopt].constructor === Number) {
-          /* Using `maxLength` of the given option is the best decition. */
-          var length = OptionsTable.decode.maxLength(option);
-          if (subopt == 0) {
-            n += setOptionHeader(payload, n, d, length);
-          } else {
-            n += setOptionHeader(payload, n, d, length);
-          }
-          n += uint.write[length](payload, request.options.byNumber[option][subopt], n);
-        } /* else {
-          throw new Error("Unidentified option in the `request` object!");
-        } */
+        d = option - p; p = option;
+        n += setOption(payload, n, d, request.options.byNumber[option][subopt]);
       }
+    } else {
+      throw new Error("Malformed option in the `request` object!");
     }
   }
 
   console.log(util.inspect(payload));
-
 
   //callback(stack.ParseHeaders.encode(request));
 };
