@@ -3,6 +3,48 @@ module.exports = ( function (stack, hooks) {
   var agregate = {
 
     encoder: function (request, callback) {
+
+      request.options.byNumber = [];
+
+      /* Let's do all this array manipulations one by one for now - optimize later! */
+      for (var option in request.options) {
+        if (request.options.hasOwnProperty(option) &&
+            stack.OptionsTable.encode.isDefined(option)) {
+          request.options.byNumber[stack.OptionsTable.encode.getNumber(option)] = request.options[option];
+        }
+      }
+
+      /* An option was not specified - apply default value (if defined) */
+      for (var option = 1; option <= request.options.byNumber.length; option++) {
+        if (request.options.byNumber[option] === undefined &&
+            stack.OptionsTable.decode.defaultValue(option) !== undefined) {
+          request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
+        }
+      }
+
+      /* To keep it simple we just allocate the maximum suggested by the RFC. */
+      request.payload = new Buffer(1152);
+
+      var n = 4, // Offset
+          d = 0, // Delta
+          p = 0; // Previous
+
+      /* Iterate over sorted options */
+      for (var option in request.options.byNumber) {
+        if (!stack.OptionsTable.decode.allowMultiple(option)) {
+          d = option - p; p = option;
+          n += agregate.setOption(request.payload, n, d, option, request.options.byNumber[option]);
+        } else if (stack.OptionsTable.decode.allowMultiple(option) &&
+            request.options.byNumber[option].constructor === Array) {
+          for (var subopt in request.options.byNumber[option]) {
+            d = option - p; p = option;
+            n += agregate.setOption(request.payload, n, d, option, request.options.byNumber[option][subopt]);
+          }
+        } else {
+          throw new Error("Malformed option in the `request` object!");
+        }
+      }
+
       callback(stack.ParseHeaders.encode(request));
     },
     decoder: function (messageBuffer, requestInfo) {
@@ -39,6 +81,33 @@ module.exports = ( function (stack, hooks) {
         request.payload = request.payload.slice(option.end);
       }
       stack.EventEmitter.emit('request', request);
+    },
+    setOptionHeader: function (buffer, offset, delta, length) {
+      if (length < 15) {
+        buffer[offset] = (0x0F & length) | (0xF0 & delta << 4);
+        return 1;
+      } else {
+        buffer[offset] = 0x0F | (0xF0 & delta << 4);
+        buffer[offset+1] = 0xFF & (length - 15);
+        return 2;
+      }
+    },
+    setOption: function (buffer, offset, option, delta, data) {
+      if (typeof data === 'object') {
+        throw new Error("Malformed option in the `request` object!");
+      } else if (data.constructor === String) {
+        var length = Buffer.byteLength(data);
+        offset += agregate.setOptionHeader(buffer, offset, delta, length);
+        offset += buffer.write(data, offset);
+      } else if (data.constructor === Number) {
+        /* Using `maxLength` of the given option is the best decition. */
+        var length = stack.OptionsTable.decode.maxLength(option);
+        offset += agregate.setOptionHeader(buffer, offset, delta, length);
+        offset += stack.IntegerUtils.write[length](buffer, data, offset);
+        return offset;
+      } else {
+        throw new Error("Unidentified option in the `request` object!");
+      }
     },
     appendOption: function (requestOptions, option, code, length, OptionsTable) {
 
