@@ -33,12 +33,14 @@ module.exports = ( function (stack, hooks) {
       for (var option in request.options.byNumber) {
         if (!stack.OptionsTable.decode.allowMultiple(option)) {
           d = option - p; p = option;
-          n += agregate.setOption(request.payload, n, d, option, request.options.byNumber[option]);
+          n = agregate.setOption(request.payload, n, d, option, request.options.byNumber[option]);
+          //console.log('n:'+n);
         } else if (stack.OptionsTable.decode.allowMultiple(option) &&
             request.options.byNumber[option].constructor === Array) {
           for (var subopt in request.options.byNumber[option]) {
             d = option - p; p = option;
-            n += agregate.setOption(request.payload, n, d, option, request.options.byNumber[option][subopt]);
+            n = agregate.setOption(request.payload, n, d, option, request.options.byNumber[option][subopt]);
+            //console.log('n:'+n);
           }
         } else {
           throw new Error("Malformed option in the `request` object!");
@@ -83,27 +85,36 @@ module.exports = ( function (stack, hooks) {
       stack.EventEmitter.emit('request', request);
     },
     setOptionHeader: function (buffer, offset, delta, length) {
+      //console.log('In `setOptionHeader`: offset='+offset+', delta='+delta+', length='+length+';');
       if (length < 15) {
+        //console.log('Regular Header');
         buffer[offset] = (0x0F & length) | (0xF0 & delta << 4);
         return 1;
       } else {
+        //console.log('Extended Header');
         buffer[offset] = 0x0F | (0xF0 & delta << 4);
         buffer[offset+1] = 0xFF & (length - 15);
         return 2;
       }
     },
     setOption: function (buffer, offset, option, delta, data) {
+      //console.log('In `setOption`: offset='+offset+', delta='+delta+', data='+data+';');
       if (typeof data === 'object') {
         throw new Error("Malformed option in the `request` object!");
       } else if (data.constructor === String) {
         var length = Buffer.byteLength(data);
         offset += agregate.setOptionHeader(buffer, offset, delta, length);
-        offset += buffer.write(data, offset);
+        //console.log('n:'+offset+' (wrote string header, length='+length+')');
+        offset += buffer.write(data, offset, 'ascii');
+        //console.log('n:'+offset+' (wrote the string, length='+length+')');
+        return offset;
       } else if (data.constructor === Number) {
         /* Using `maxLength` of the given option is the best decition. */
         var length = stack.OptionsTable.decode.maxLength(option);
         offset += agregate.setOptionHeader(buffer, offset, delta, length);
+        //console.log('n:'+offset+' (wrote number header, length='+length+')');
         offset += stack.IntegerUtils.write[length](buffer, data, offset);
+        //console.log('n:'+offset+' (wrote the number)');
         return offset;
       } else {
         throw new Error("Unidentified option in the `request` object!");

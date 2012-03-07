@@ -22,8 +22,8 @@ COAP.stack.ParseMessage = require  ('./../message')(COAP.stack, COAP.hooks);
 COAP.stack.ParseMessage.encode({
   options: {
     'Uri-Host': 'testrig',
-    'Uri-Path': [ 'absc', 'dzy', 'xfg', 'search' ],
-    'Uri-Query': [ 'h=1', 'w=2/h/fd', 'a=1', 'b=2' ]
+    'Uri-Path': [ 'a', 'd', 'x', 's' ],
+    'Uri-Query': [ 'h=1', 'w=2', 'a=1', 'b=2' ]
   }
 }, function (buffer) {
   COAP.stack.ParseMessage.decode(buffer, {address: '::1', port: 1009});
