@@ -1,7 +1,7 @@
 #!/usr/bin/env node node_modules/nodeunit/bin/nodeunit
 var util = require ('util');
 exports['Equivalence mapping'] = function (test) {
-  var u = require('../buffers');
+  var u = require('../integer');
   var x = new Buffer(200000000+64);
 
   /*
