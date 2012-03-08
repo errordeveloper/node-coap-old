@@ -4,6 +4,7 @@ module.exports = ( function (stack, hooks) {
 
     encoder: function (request, callback) {
 
+      request.optionsCount = 0;
       request.options.byNumber = [];
 
       /* Let's do all this array manipulations one by one for now - optimize later! */
@@ -15,12 +16,13 @@ module.exports = ( function (stack, hooks) {
       }
 
       /* An option was not specified - apply default value (if defined) */
-      for (var option = 1; option <= request.options.byNumber.length; option++) {
-        if (request.options.byNumber[option] === undefined &&
-            stack.OptionsTable.decode.defaultValue(option) !== undefined) {
-          request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
-        }
-      }
+      //for (var option = 1; option <= request.options.byNumber.length; option++) {
+      //  if (request.options.byNumber[option] === undefined &&
+      //      stack.OptionsTable.decode.defaultValue(option) !== undefined) {
+      //    request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
+      //    request.optionsCount++;
+      //  }
+      //}
 
       /* To keep it simple we just allocate the maximum suggested by the RFC. */
       request.payload = new Buffer(1152);
@@ -33,13 +35,15 @@ module.exports = ( function (stack, hooks) {
       for (var option in request.options.byNumber) {
         if (!stack.OptionsTable.decode.allowMultiple(option)) {
           d = option - p; p = option;
-          n = agregate.setOption(request.payload, n, d, option, request.options.byNumber[option]);
+          n = agregate.setOption(request.payload, n, option, d, request.options.byNumber[option]);
+          request.optionsCount++;
           //console.log('n:'+n);
         } else if (stack.OptionsTable.decode.allowMultiple(option) &&
             request.options.byNumber[option].constructor === Array) {
           for (var subopt in request.options.byNumber[option]) {
             d = option - p; p = option;
-            n = agregate.setOption(request.payload, n, d, option, request.options.byNumber[option][subopt]);
+            n = agregate.setOption(request.payload, n, option, d, request.options.byNumber[option][subopt]);
+            request.optionsCount++;
             //console.log('n:'+n);
           }
         } else {
@@ -57,7 +61,7 @@ module.exports = ( function (stack, hooks) {
 
       if (hooks.stats) { hooks.stats('messages', 1); }
       if (hooks.stats) { hooks.stats('total_rx', requestInfo.size); }
-      if (hooks.debug) { hooks.debug('request.options = ', request.options); }
+      if (hooks.debug) { hooks.debug('request = ', request); }
 
       var n = request.optionsCount;
 
@@ -105,7 +109,7 @@ module.exports = ( function (stack, hooks) {
         var length = Buffer.byteLength(data);
         offset += agregate.setOptionHeader(buffer, offset, delta, length);
         //console.log('n:'+offset+' (wrote string header, length='+length+')');
-        offset += buffer.write(data, offset, 'ascii');
+        offset += buffer.write(data, offset);
         //console.log('n:'+offset+' (wrote the string, length='+length+')');
         return offset;
       } else if (data.constructor === Number) {

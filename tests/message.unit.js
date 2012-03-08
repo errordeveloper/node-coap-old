@@ -20,8 +20,13 @@ COAP.stack.IntegerUtils = require  ('./../integer');
 COAP.stack.ParseMessage = require  ('./../message')(COAP.stack, COAP.hooks);
 
 COAP.stack.ParseMessage.encode({
+  protocolVersion: 1,
+  connectionType: 'CON',
+  transactionID: 2000,
+  requestCode: 'GET',
   options: {
-    'Uri-Host': 'testrig',
+    //'Uri-Port': 250,
+    'Uri-Host': 'locahost',
     'Uri-Path': [ 'a', 'd', 'x', 's' ],
     'Uri-Query': [ 'h=1', 'w=2', 'a=1', 'b=2' ]
   }
