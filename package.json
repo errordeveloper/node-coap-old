@@ -1,0 +1,19 @@
+{ "name": "node-coap",
+  "description": "Implementation of CoAP for Node",
+  "maintainers": [{
+    "node": "Ilya Dmitrichenko",
+    "web": "https://git.io/ilya.dmitrichenko"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/errordeveloper/node-coap.git"
+  },
+  "devDependencies": {
+    { "nodeunit": ">=0.6.4" }
+  },
+  "bugs": { "url": "http://github.com/errordeveloper/node-coap/issues" },
+  "licenses": [{
+    "type": "BSD",
+    "url": "http://www.linfo.org/bsdlicense.html"
+  }]
+}
