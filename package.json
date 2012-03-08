@@ -1,4 +1,5 @@
 { "name": "node-coap",
+  "version": "0.0.1",
   "description": "Implementation of CoAP for Node",
   "maintainers": [{
     "node": "Ilya Dmitrichenko",
@@ -9,7 +10,10 @@
     "url": "git://github.com/errordeveloper/node-coap.git"
   },
   "devDependencies": {
-    { "nodeunit": ">=0.6.4" }
+    "nodeunit": ">=0.6.4"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/nodeunit tests/*.unit.js"
   },
   "bugs": { "url": "http://github.com/errordeveloper/node-coap/issues" },
   "licenses": [{
