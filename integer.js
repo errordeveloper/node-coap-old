@@ -40,12 +40,12 @@ module.exports = ( function IntegerUtils () {
   var read = [];
 
   read[4] = function read32(buffer, offset) {
-    return 0xffffffff & (
+    return (0xffffffff & (
       (buffer[offset]   << 0x18) |
       (buffer[offset+1] << 0x10) |
       (buffer[offset+2] << 0x08) |
       (buffer[offset+3])
-    );
+    )) >>> 0; // cast it as unsigned integer
   };
 
   read[3] = function read24(buffer, offset) {
