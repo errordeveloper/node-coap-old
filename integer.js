@@ -14,25 +14,25 @@ module.exports = ( function IntegerUtils () {
     buffer[offset+1] = (value >>> 0x10) & 0xff;
     buffer[offset+2] = (value >>> 0x08) & 0xff;
     buffer[offset+3] = (value) & 0xff;
-    return offset+3;
+    return 4;
   };
  
   write[3] = function write24(buffer, offset, value) {
     buffer[offset]   = (value >>> 0x10) & 0xff;
     buffer[offset+1] = (value >>> 0x08) & 0xff;
     buffer[offset+2] = (value) & 0xff;
-    return offset+2;
+    return 3;
   };
 
   write[2] = function write16(buffer, offset, value) {
     buffer[offset]   = (value >>> 0x08) & 0xff;
     buffer[offset+1] = (value) & 0xff;
-    return offset+1;
+    return 2;
   };
 
   write[1] = function write8(buffer, offset, value) {
     buffer[offset] = (value) & 0xff;
-    return offset;
+    return 1;
   };
 
   write[0] = undefined; //FIXME?
