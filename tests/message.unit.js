@@ -25,7 +25,10 @@ COAP.stack.ParseMessage.encode({
   transactionID: 2000,
   requestCode: 'GET',
   options: {
-    //'Uri-Port': 250,
+    'Max-Age': 2389123767,
+    'Uri-Port': 18967,
+    'Accept': 0xf056,
+    'Content-Type': 0xdead,
     'Uri-Host': 'locahost',
     'Uri-Path': [ 'a', 'd', 'x', 's' ],
     'Uri-Query': [ 'h=1', 'w=2', 'a=1', 'b=2' ]
