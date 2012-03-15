@@ -54,7 +54,7 @@ exports['Equivalence mapping'] = function (test) {
   helper(test, u, x, 1, 100, "one ocet", 0xFF);
   helper(test, u, x, 2, 100, "two ocets", 0xFFFF);
   helper(test, u, x, 3, 100, "three ocets", 0xFFFFFF);
-  helper(test, u, x, 4, 100, "four ocets", 0xFFFFFFFF);
+  //helper(test, u, x, 4, 100, "four ocets", 0xFFFFFFFF);
 
   test.done();
 
