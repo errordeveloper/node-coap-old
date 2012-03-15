@@ -27,8 +27,8 @@ COAP.stack.ParseMessage.encode({
   options: {
     'Max-Age': 2389123767,
     'Uri-Port': 18967,
-    'Accept': 61455, //0xf00f,
-    'Content-Type': 57005, //0xdead,
+    'Accept': [0xf00f],
+    'Content-Type': 0xdead,
     'Uri-Host': 'locahost',
     'Uri-Path': [ 'a', 'd', 'x', 's' ],
     'Uri-Query': [ 'h=1', 'w=2', 'a=1', 'b=2' ]
