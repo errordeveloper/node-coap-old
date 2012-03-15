@@ -117,7 +117,7 @@ module.exports = ( function (stack, hooks) {
         var length = stack.OptionsTable.decode.maxLength(option);
         offset += agregate.setOptionHeader(buffer, offset, delta, length);
         //console.log('n:'+offset+' (wrote number header, length='+length+')');
-        offset += stack.IntegerUtils.write[length](buffer, data, offset);
+        offset += stack.IntegerUtils.write[length](buffer, offset, data);
         //console.log('n:'+offset+' (wrote the number)');
         return offset;
       } else {
