@@ -47,6 +47,7 @@ module.exports = ( function (stack, hooks) {
             //console.log('n:'+n);
           }
         } else {
+          //FIXME: currently the options which are allowed as multiple are not allowed as single values!
           throw new Error("Malformed option in the `request` object!");
         }
       }
@@ -104,7 +105,7 @@ module.exports = ( function (stack, hooks) {
     setOption: function (buffer, offset, option, delta, data) {
       //console.log('In `setOption`: offset='+offset+', delta='+delta+', data='+data+';');
       if (typeof data === 'object') {
-        throw new Error("Malformed option in the `request` object!");
+        throw new Error("Malformed option (of type `object`) detected in the `request` object!");
       } else if (data.constructor === String) {
         var length = Buffer.byteLength(data);
         offset += agregate.setOptionHeader(buffer, offset, delta, length);
