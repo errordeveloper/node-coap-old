@@ -18,7 +18,7 @@ module.exports = ( function IntegerUtils () {
   };
  
   write[3] = function write24(buffer, offset, value) {
-    buffer[offset]     = (value >>> 0x10) & 0xff;
+    buffer[offset]   = (value >>> 0x10) & 0xff;
     buffer[offset+1] = (value >>> 0x08) & 0xff;
     buffer[offset+2] = (value) & 0xff;
     return offset+2;
