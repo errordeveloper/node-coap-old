@@ -9,7 +9,7 @@ module.exports = ( function IntegerUtils () {
 
   var write = [];
 
-  write[4] = function write32(buffer, value, offset) {
+  write[4] = function write32(buffer, offset, value) {
     buffer[offset]   = (value >>> 0x18) & 0xff;
     buffer[offset+1] = (value >>> 0x10) & 0xff;
     buffer[offset+2] = (value >>> 0x08) & 0xff;
@@ -17,20 +17,20 @@ module.exports = ( function IntegerUtils () {
     return offset+3;
   };
  
-  write[3] = function write24(buffer, value, offset) {
+  write[3] = function write24(buffer, offset, value) {
     buffer[offset]     = (value >>> 0x10) & 0xff;
     buffer[offset+1] = (value >>> 0x08) & 0xff;
     buffer[offset+2] = (value) & 0xff;
     return offset+2;
   };
 
-  write[2] = function write16(buffer, value, offset) {
+  write[2] = function write16(buffer, offset, value) {
     buffer[offset]   = (value >>> 0x08) & 0xff;
     buffer[offset+1] = (value) & 0xff;
     return offset+1;
   };
 
-  write[1] = function write8(buffer, value, offset) {
+  write[1] = function write8(buffer, offset, value) {
     buffer[offset] = (value) & 0xff;
     return offset;
   };
