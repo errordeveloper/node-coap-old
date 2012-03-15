@@ -66,12 +66,30 @@ function helper (test, u, x, n, k, str, max) {
 exports['Equivalence mapping'] = function (test) {
 
   var u = require('../integer');
-  var x = new Buffer(200000000+64);
+  //FIXME: use samll buffer on `*.travis-ci.org` hosts and big one otherwise!
+  // i.e. call `hostname` or use `process.env` :)
+  var x = new Buffer(1024);
+  //TODO: use random values of offest parameter in these four ranges
 
   helper(test, u, x, 1, 100, "one ocet", 0xFF);
   helper(test, u, x, 2, 100, "two ocets", 0xFFFF);
   helper(test, u, x, 3, 100, "three ocets", 0xFFFFFF);
-  //FIXME: helper(test, u, x, 4, 100, "four ocets", 0xFFFFFFFF);
+  //helper(test, u, x, 4, 100, "four ocets", 0xFFFFFFFF);
+
+  helper(test, u, x, 1, 300, "one ocet", 0xFF);
+  helper(test, u, x, 2, 300, "two ocets", 0xFFFF);
+  helper(test, u, x, 3, 300, "three ocets", 0xFFFFFF);
+  //helper(test, u, x, 4, 300, "four ocets", 0xFFFFFFFF);
+
+  helper(test, u, x, 1, 200, "one ocet", 0xFF);
+  helper(test, u, x, 2, 200, "two ocets", 0xFFFF);
+  helper(test, u, x, 3, 200, "three ocets", 0xFFFFFF);
+  //helper(test, u, x, 4, 200, "four ocets", 0xFFFFFFFF);
+
+  helper(test, u, x, 1, 400, "one ocet", 0xFF);
+  helper(test, u, x, 2, 400, "two ocets", 0xFFFF);
+  helper(test, u, x, 3, 400, "three ocets", 0xFFFFFF);
+  //helper(test, u, x, 4, 400, "four ocets", 0xFFFFFFFF);
 
   test.done();
 
