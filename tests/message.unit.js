@@ -21,9 +21,9 @@ COAP.stack.ParseMessage = require  ('./../message')(COAP.stack, COAP.hooks);
 
 COAP.stack.ParseMessage.encode({
   protocolVersion: 1,
-  connectionType: 'CON',
-  transactionID: 2000,
-  requestCode: 'GET',
+  messageType: 'CON',
+  messageID: 2000,
+  messageCode: 'GET',
   options: {
     'Max-Age': 2389123767,
     'Uri-Port': 18967,
