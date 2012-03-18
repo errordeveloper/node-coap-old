@@ -1,4 +1,6 @@
-module.exports = (function () {
+// 3.1.  Message Format (Draft 09)
+
+module.exports = ( function ParseHeaders () {
   /* We keep it low-level here, only the message type
    * is parsed to string format (it's easy anyway)!
    * The idea is to have this as "a model" and put no

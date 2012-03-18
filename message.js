@@ -1,6 +1,15 @@
-module.exports = ( function (stack, hooks) {
+// 3.1.  Message Format (Draft 09)
+// 3.2.  Option Format (Draft 09)
 
-  var agregate = {
+module.exports = ( function ParseMessage (stack, hooks) {
+  /* This the toplevel message parser, it ustilises the
+   * `OptionsTable` and `ParseHeaders` models to translate
+   * between objects and binary encoded packets. It does
+   * implement more logic and recursion the above models,
+   * but still is rather low-level and does not implement
+   * any behaviour of a CoAP endpoint. */
+
+  var message = {
 
     encoder: function (request, callback) {
 
@@ -35,14 +44,14 @@ module.exports = ( function (stack, hooks) {
       for (var option in request.options.byNumber) {
         if (!stack.OptionsTable.decode.allowMultiple(option)) {
           d = option - p; p = option;
-          n = agregate.setOption(request.payload, n, option, d, request.options.byNumber[option]);
+          n = message.setOption(request.payload, n, option, d, request.options.byNumber[option]);
           request.optionsCount++;
           //console.log('n:'+n);
         } else if (stack.OptionsTable.decode.allowMultiple(option) &&
             request.options.byNumber[option].constructor === Array) {
           for (var subopt in request.options.byNumber[option]) {
             d = option - p; p = option;
-            n = agregate.setOption(request.payload, n, option, d, request.options.byNumber[option][subopt]);
+            n = message.setOption(request.payload, n, option, d, request.options.byNumber[option][subopt]);
             request.optionsCount++;
             //console.log('n:'+n);
           }
@@ -81,7 +90,7 @@ module.exports = ( function (stack, hooks) {
 
         if (hooks.debug) { hooks.debug('option = ', option); }
 
-        agregate.appendOption(request.options, option.type,
+        message.appendOption(request.options, option.type,
             request.payload.slice(option.start, option.end),
             option.length, stack.OptionsTable.decode);
 
@@ -108,7 +117,7 @@ module.exports = ( function (stack, hooks) {
         throw new Error("Malformed option (of type `object`) detected in the `request` object!");
       } else if (data.constructor === String) {
         var length = Buffer.byteLength(data);
-        offset += agregate.setOptionHeader(buffer, offset, delta, length);
+        offset += message.setOptionHeader(buffer, offset, delta, length);
         //console.log('n:'+offset+' (wrote string header, length='+length+')');
         offset += buffer.write(data, offset);
         //console.log('n:'+offset+' (wrote the string, length='+length+')');
@@ -116,7 +125,7 @@ module.exports = ( function (stack, hooks) {
       } else if (data.constructor === Number) {
         /* Using `maxLength` of the given option is the best decition. */
         var length = stack.OptionsTable.decode.maxLength(option);
-        offset += agregate.setOptionHeader(buffer, offset, delta, length);
+        offset += message.setOptionHeader(buffer, offset, delta, length);
         //console.log('n:'+offset+' (wrote number header, length='+length+')');
         offset += stack.IntegerUtils.write[length](buffer, offset, data);
         //console.log('n:'+offset+' (wrote the number)');
@@ -162,4 +171,4 @@ module.exports = ( function (stack, hooks) {
     }
   };
 
-  return { encode: agregate.encoder, decode: agregate.decoder }; } );
+  return { encode: message.encoder, decode: message.decoder }; } );

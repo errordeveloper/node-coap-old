@@ -1,6 +1,10 @@
 // 5.10. Options (Draft 08)
 
-module.exports = ( function () {
+module.exports = ( function OptionsTable () {
+  /* This could had been called `ParseOptions`, but
+   * it's more of a table of options, because the
+   * parsing is really done in `ParseMessage`, since
+   * recursion and some logic is required. */
 
   var options = {
 
