@@ -16,13 +16,13 @@ module.exports = ( function (stack, hooks) {
       }
 
       /* An option was not specified - apply default value (if defined) */
-      //for (var option = 1; option <= request.options.byNumber.length; option++) {
-      //  if (request.options.byNumber[option] === undefined &&
-      //      stack.OptionsTable.decode.defaultValue(option) !== undefined) {
-      //    request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
-      //    request.optionsCount++;
-      //  }
-      //}
+      for (var option = 1; option <= request.options.byNumber.length; option++) {
+        if (request.options.byNumber[option] === undefined &&
+            stack.OptionsTable.decode.defaultValue(option) !== undefined) {
+          request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
+          request.optionsCount++;
+        }
+      }
 
       /* To keep it simple we just allocate the maximum suggested by the RFC. */
       request.payload = new Buffer(1152);

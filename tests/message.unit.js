@@ -25,7 +25,7 @@ COAP.stack.ParseMessage.encode({
   messageID: 2000,
   messageCode: 'GET',
   options: {
-    'Max-Age': 2389123767,
+    //'Max-Age': 2389,
     'Uri-Port': 18967,
     'Accept': [0xf00f],
     'Content-Type': 0xdead,
