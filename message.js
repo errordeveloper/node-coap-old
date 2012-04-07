@@ -25,6 +25,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
       }
 
       /* An option was not specified - apply default value (if defined) */
+      /* NOTE: this will not work if `request.options` is empty! */
       for (var option = 1; option <= request.options.byNumber.length; option++) {
         if (request.options.byNumber[option] === undefined &&
             stack.OptionsTable.decode.defaultValue(option) !== undefined) {
@@ -76,8 +77,8 @@ module.exports = ( function ParseMessage (stack, hooks) {
       var n = request.optionsCount;
 
       var option = {type: 0};
-      while (0 < n--) {
-
+      while (0 < --n) {
+        if (hooks.debug) { hooks.debug('optionsRemaining = ', n); }
         option.start = 1;
         option.type += (request.payload[0] >>> 4);
         option.length = (request.payload[0] & 0x0F);
