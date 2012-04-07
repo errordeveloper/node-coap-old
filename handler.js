@@ -31,6 +31,7 @@ var requestHandler = function (req) {
 
 };
 
-var server = coap.createServer(requestHandler, {debug: debugHook, stats: statsHook}).listen();
+var server = coap.createServer(requestHandler,
+    {debug: debugHook, stats: statsHook}).listen();
 
 //server.listen();
