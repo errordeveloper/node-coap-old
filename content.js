@@ -31,6 +31,6 @@ module.exports = ( function ContentTypes () {
 
       }
     }
-  }
+  };
 
-  return { encode: content.encoder, decode: content.decoder } () );
+  return { encode: content.encoder, decode: content.decoder }; } () );
