@@ -23,11 +23,11 @@ module.exports = ( function ContentTypes () {
         case 0x00:  return ('text/plain');
         case 0x28:  return ('application/link-format');
         case 0x29:  return ('application/xml');
-        case 0x2a:  return ('application/octet');
+        case 0x2a:  return ('application/octet-stream');
         case 0x2f:  return ('application/exi');
         case 0x32:  return ('application/json');
           default: //XXX: and here?
-          return ('application/octet');
+          return ('application/octet-stream');
 
       }
     }
