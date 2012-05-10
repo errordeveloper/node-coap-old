@@ -1,6 +1,10 @@
 #!/usr/bin/env node node_modules/nodeunit/bin/nodeunit
 
 var util = require ('util');
+var diff = require ('difflet')({
+  indent: 12,
+  comment: true
+});
 
 var COAP = {
   dgram: require ('dgram'),
@@ -19,7 +23,7 @@ COAP.stack.ParseHeaders = require  ('./../headers');
 COAP.stack.IntegerUtils = require  ('./../integer');
 COAP.stack.ParseMessage = require  ('./../message')(COAP.stack, COAP.hooks);
 
-COAP.stack.ParseMessage.encode({
+msg = {
   protocolVersion: 1,
   messageType: 'CON',
   messageID: 2000,
@@ -33,6 +37,16 @@ COAP.stack.ParseMessage.encode({
     'Uri-Path': [ 'a', 'd', 'x', 's' ],
     'Uri-Query': [ 'h=1', 'w=2', 'a=1', 'b=2' ]
   }
-}, function (buffer) {
-  COAP.stack.ParseMessage.decode(buffer, {address: '::1', port: 1009});
+}
+
+COAP.stack.ParseMessage.encode(msg, function (buf) {
+  COAP.stack.ParseMessage.decode(buf, {address: '::1', port: 1009},
+    function(req) {
+      with(req) {
+        delete payload;
+        delete byNumber;
+        delete origin;
+      }
+      diff(msg, req).pipe(process.stdout);
+    })
 });
