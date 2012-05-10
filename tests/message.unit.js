@@ -2,7 +2,7 @@
 
 var util = require ('util');
 var diff = require ('difflet')({
-  indent: 12,
+  indent: 2,
   comment: true
 });
 
