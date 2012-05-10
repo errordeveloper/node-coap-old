@@ -66,11 +66,13 @@ module.exports = ( function OptionsTable () {
     options: {} // this used to store the map for `getNumber`
   };
 
-  // build reverse mapping table for encoding
-  for (var n in options.table) {
-    if (options.table[n][1]) {
-      options.encoder[options.table[n][1]]=options.table[n];
-      options.options[options.table[n][1]]=n;
+  with (options) {
+    // build reverse mapping table for encoding
+    for (var n in table) {
+      if (table[n][1]) {
+        encoder[table[n][1]]=table[n];
+        options[table[n][1]]=n;
+      }
     }
   }
 

@@ -34,17 +34,19 @@ module.exports = ( function ParseHeaders () {
     },
     encodeMessageTypes: { 'CON':0, 'NON':1, 'ACK':2, 'RST':3 },
     encoder: function (message) {
-      // first octet: version, type, and option count
-      message.payload[0] = 0x00;
-      message.payload[0] |= (0x0F & (message.optionsCount));
-      message.payload[0] |= (0xC0 & (message.protocolVersion << 6));
-      message.payload[0] |= (0x30 & (headers.encodeMessageTypes[message.messageType] << 4));
-      // second octet: request method or response code
-      message.payload[1] = headers.encodeMessageCodes(message.messageCode);
-      // third and forth octet: message ID (MID)
-      message.payload[2] = (0xFF & (message.messageID >> 8));
-      message.payload[3] = (0xFF & (message.messageID));
-      // We return from here, so that can be passed to `dgram.send()`
+      with (message) {
+        // first octet: version, type, and option count
+        payload[0] = 0x00;
+        payload[0] |= (0x0F & (optionsCount));
+        payload[0] |= (0xC0 & (protocolVersion << 6));
+        payload[0] |= (0x30 & (headers.encodeMessageTypes[messageType] << 4));
+        // second octet: request method or response code
+        payload[1] = headers.encodeMessageCodes(messageCode);
+        // third and forth octet: message ID (MID)
+        payload[2] = (0xFF & (messageID >> 8));
+        payload[3] = (0xFF & (messageID));
+        // We return from here, so that can be passed to `dgram.send()`
+      }
       return message.payload; }
   };
     
