@@ -10,7 +10,8 @@
     "url": "git://github.com/errordeveloper/node-coap.git"
   },
   "devDependencies": {
-    "nodeunit": ">=0.6.4"
+    "nodeunit": ">=0.6.4",
+    "difflet": ">=0.2.1"
   },
   "scripts": {
     "test": "node_modules/.bin/nodeunit tests/*.unit.js"
