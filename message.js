@@ -64,7 +64,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
 
       callback(stack.ParseHeaders.encode(request));
     },
-    decoder: function (messageBuffer, requestInfo) {
+    decoder: function (messageBuffer, requestInfo, callback) {
 
       var request = stack.ParseHeaders.decode(messageBuffer, requestInfo);
 
@@ -98,6 +98,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
         request.payload = request.payload.slice(option.end);
       }
       stack.EventEmitter.emit('request', request);
+      if (typeof callback === 'function') { callback(request); }
     },
     setOptionHeader: function (buffer, offset, delta, length) {
       //console.log('In `setOptionHeader`: offset='+offset+', delta='+delta+', length='+length+';');
