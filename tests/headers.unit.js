@@ -2,7 +2,7 @@
 
 var util = require ('util');
 
-var HeaderParser = require ( '../headers.js' ),
+var ParseHeaders = require ( '../headers.js' ),
     Decoder = require ( '../headers.js' ).decode,
     Encoder = require ( '../headers.js' ).encode;
 
@@ -53,7 +53,7 @@ exports['Equivalence mapping'] = function (test) {
 
 exports['Methods exposed'] = function (test) {
 
-  test.ok(HeaderParser.hasOwnProperty('encode'));
-  test.ok(HeaderParser.hasOwnProperty('decode'));
+  test.ok(ParseHeaders.hasOwnProperty('encode'));
+  test.ok(ParseHeaders.hasOwnProperty('decode'));
 
   test.done(); };
