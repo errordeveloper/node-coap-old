@@ -2,20 +2,7 @@ module.exports = ( function () {
 
   var createServer = function createServer(callback, hooks) {
 
-    var COAP = {
-      dgram: require ('dgram'),
-      stack: {
-        /* It's better to create the stack in one place. */
-      },
-      hooks: hooks
-    };
-
-    /* The actual stack is created here! */
-    COAP.stack.EventEmitter = new (require ('events').EventEmitter)();
-    COAP.stack.IntegerUtils = require  ('./integer');
-    COAP.stack.OptionsTable = require  ('./options');
-    COAP.stack.HeaderParser = require  ('./headers');
-    COAP.stack.ParseMessage = require  ('./message')(COAP.stack, COAP.hooks);
+    var COAP = require ('./')(hooks);
 
     var socket = COAP.dgram.createSocket ('udp6');
 
@@ -36,9 +23,9 @@ module.exports = ( function () {
         }
       },
       respond: function (message) {
-        var socket = COAP.dgram.createSocket('udp6');
+        var socket = COAP.helpers.createSocket('udp6');
         COAP.stack.ParseMessage.encode(message, function (buffer) {
-          socket.send(message, 0, message.length, client.address, client.port, function (err, bytes) {
+          socket.send(message, function (err, bytes) {
             if (err) { throw err; }
             client.close();
           });
