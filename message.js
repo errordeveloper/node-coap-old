@@ -61,7 +61,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
           throw new Error("Malformed option in the `request` object!");
         }
       }
-
+      request.optionsLength = n
       callnext(stack.ParseHeaders.encode(request));
     },
     decoder: function (messageBuffer, requestInfo, callback) {
