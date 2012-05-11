@@ -11,7 +11,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
 
   var message = {
 
-    encoder: function (request, callback) {
+    encoder: function (request, callnext) {
 
       request.optionsCount = 0;
       request.options.byNumber = [];
@@ -62,7 +62,7 @@ module.exports = ( function ParseMessage (stack, hooks) {
         }
       }
 
-      callback(stack.ParseHeaders.encode(request));
+      callnext(stack.ParseHeaders.encode(request));
     },
     decoder: function (messageBuffer, requestInfo, callback) {
 
