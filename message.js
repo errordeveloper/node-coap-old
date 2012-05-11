@@ -30,7 +30,6 @@ module.exports = ( function ParseMessage (stack, hooks) {
         if (request.options.byNumber[option] === undefined &&
             stack.OptionsTable.decode.defaultValue(option) !== undefined) {
           request.options.byNumber[option] = stack.OptionsTable.decode.defaultValue(option);
-          request.optionsCount++;
         }
       }
 
@@ -61,7 +60,10 @@ module.exports = ( function ParseMessage (stack, hooks) {
           throw new Error("Malformed option in the `request` object!");
         }
       }
-      request.optionsLength = n
+      // XXX: it is not cleare whether it's used wrongly here, or even
+      // Wireshark doesn't know about the magic end-of-options marker?
+      // request.optionsLength = message.setEndMarker(request.payload, n);
+      request.optionsLength = n;
       callnext(stack.ParseHeaders.encode(request));
     },
     decoder: function (messageBuffer, requestInfo, callback) {
@@ -135,6 +137,11 @@ module.exports = ( function ParseMessage (stack, hooks) {
       } else {
         throw new Error("Unidentified option in the `request` object!");
       }
+    },
+    setEndMarker: function (buffer, offset) {
+      buffer[offset] = 0xF0; //= (0x0F & 0) | (0xF0 & 15 << 4);
+      buffer[offset++] = 0xF0;
+      return offset;
     },
     appendOption: function (requestOptions, option, code, length, OptionsTable) {
 
