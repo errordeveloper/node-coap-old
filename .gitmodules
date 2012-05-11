@@ -10,3 +10,9 @@
 [submodule "import/californium"]
 	path = import/californium
 	url = git://github.com/mkovatsc/Californium.git
+[submodule "node_modules/nodeshark"]
+	path = node_modules/nodeshark
+	url = git://github.com/nearinfinity/node-shark.git
+[submodule "import/koanlogic"]
+	path = import/koanlogic
+	url = git://github.com/koanlogic/webthings.git

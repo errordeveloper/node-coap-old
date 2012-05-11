@@ -14,6 +14,7 @@ module.exports = ( function COAP (hooks) {
     stack.OptionsTable = require  ('./options');
     stack.ParseHeaders = require  ('./headers');
     stack.ParseMessage = require  ('./message')(COAP.stack, COAP.hooks);
+    stack.StateMachine = require  ('./machine');
   }
   
   COAP.helpers            = require  ('./helpers')(COAP.stack, COAP.hooks, COAP.dgram);
