@@ -78,7 +78,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         if (err) { throw err; }
 
         if (hooks.stats) { hooks.stats('tx_count', 1); }
-        if (hooks.stats) { hooks.stats('tx_bytes', bytes); }
+        if (hooks.stats) { hooks.stats('tx_bytes', length); }
 
         // TODO: handle
         // - ICPM (?)
