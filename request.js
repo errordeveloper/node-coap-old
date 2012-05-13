@@ -54,9 +54,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
       options = helpers.MakeURI(path);
     }
 
-    //console.log(message);
     stack.ParseMessage.encode(message, function (payload) {
-      //console.log(message);
       var length = 0;
       if (options.method === 'GET' || options.method === 'DELETE') {
         // We need to drop the tail of the pre-allocated buffer
@@ -73,7 +71,6 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         //   it shall be revisitied then
         length = generate(payload.slice(message.optionsLength));
       }
-      console.log(length);
       socket.send(payload, 0, length, port, host, function (err, bytes) {
         if (err) { throw err; }
 
