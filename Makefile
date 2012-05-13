@@ -8,18 +8,24 @@ node_modules:
 	npm install
 
 
+ifdef TRAVIS
+  BUILD_LOG := /dev/null
+else
+  BUILD_LOG := ./build.log
+endif
+
 LIBCOAP_PATH = import/libcoap/
 
 $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
-	cd $< && autoconf && ./configure
+	(cd $< && autoconf && ./configure) > $(BUILD_LOG)
 
 libcoap: $(LIBCOAP_PATH)/Makefile
-	$(MAKE) -C $(LIBCOAP_PATH)
+	$(MAKE) -C $(LIBCOAP_PATH) >> $(BUILD_LOG)
 
 ifdef TRAVIS
 libcoap_server: libcoap
 	import/libcoap/examples/coap-server &
 else
 libcoap_server:
-	import/libcoap/examples/coap-server &
+	import/libcoap/examples/coap-server -v9 &
 endif
