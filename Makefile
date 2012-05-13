@@ -11,7 +11,7 @@ node_modules:
 LIBCOAP_PATH = import/libcoap/
 
 $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
-	cd $< && ./configure
+	cd $< && autoconf && ./configure
 
 libcoap: $(LIBCOAP_PATH)/Makefile
 	$(MAKE) -C $(LIBCOAP_PATH)
