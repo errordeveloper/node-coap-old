@@ -45,11 +45,6 @@ module.exports = ( function ParseHeaders () {
         // third and forth octet: message ID (MID)
         payload[2] = (0xFF & (messageID >> 8));
         payload[3] = (0xFF & (messageID));
-        // We need to drop the tail of the pre-allocated buffer
-        // when it is not in use, i.e. doing a GET or a DELETE
-        if (messageCode === 1 || messageCode === 3) {
-          payload = payload.slice(0, optionsLength);
-        }
       }
       // We return from here, so that can be passed to `dgram.send()`
       return message.payload; }
