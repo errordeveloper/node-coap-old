@@ -6,3 +6,15 @@ lint:
 
 node_modules:
 	npm install
+
+
+LIBCOAP_PATH = import/libcoap/
+
+$(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
+	cd $< && ./configure
+
+libcoap: $(LIBCOAP_PATH)/Makefile
+	$(MAKE) -C $(LIBCOAP_PATH)
+
+libcoap_server: libcoap
+	import/libcoap/examples/coap-server &
