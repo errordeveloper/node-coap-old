@@ -101,7 +101,8 @@ module.exports = ( function ParseMessage (stack, hooks) {
       }
 
       if (hooks.stats) { hooks.stats('rx_count', 1); }
-      if (hooks.stats) { hooks.stats('rx_bytes', info.size); }
+      //FIXME: In Wireshark, it looks like our stats are wrong!
+      //if (hooks.stats) { hooks.stats('rx_bytes', info.size); }
       if (hooks.debug) { hooks.debug('rx = ', rx); }
 
       stack.EventEmitter.emit('message', rx);
