@@ -1,5 +1,7 @@
 module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params) {
 
+  var seed = Math.round(Math.random()*40404040);
+
   var socket = dgram.createSocket ('udp6');
   // XXX: We could do this, but may be we need
   // an abstract wrapper actually?
@@ -8,11 +10,14 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
   //  var socket4 = dgram.createSocket ('udp4');
   //}
 
-  socket.on('message', function (response, rinfo) {
-    console.log(rinfo);
+  // Attach COAP message parser to the socket
+  socket.on('message', stack.ParseMessage.decode);
+  // Attach response router to the parser engine
+  stack.EventEmitter.on('message', function (rx) {
+    stack.EventEmitter.emit('rx:'+rx.messageID, rx);
   });
 
-  var request = function MakeRequest (options, callback) {
+  var request = function MakeRequest (options, reciever, generate) {
     var con = options.confirmable || true;
     var rst = options.reset || false;
     var port = options.port || 5683;
@@ -24,7 +29,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
 
     var message = {
       protocolVersion: 1,
-      messageID: Math.round(Math.random()*10000),
+      messageID: ++seed,
       messageType: 'CON',
       messageCode: [
         undefined,
@@ -33,7 +38,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         'PUT',
         'DELETE'
       ].indexOf(options.method),
-      options: {}
+      options: { }
     };
 
     with (message) {
@@ -58,7 +63,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         // when it is not in use, i.e. doing a GET or a DELETE.
         length = message.optionsLength;
       } else {
-        // In the case of PUT or GET request - call the callback which
+        // In the case of PUT or GET request - call `generate()` which
         // should write data into our payload and return the length.
         // That gives us the actual length of the datagram.
         // XXX: This may be blocking, however:
@@ -66,8 +71,9 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         //   recommended values in the COAP draft 09
         // - we will probably re-design it with Streams one day, so
         //   it shall be revisitied then
-        length = callback(payload.slice(message.optionsLength));
+        length = generate(payload.slice(message.optionsLength));
       }
+      console.log(length);
       socket.send(payload, 0, length, port, host, function (err, bytes) {
         if (err) { throw err; }
 
@@ -77,6 +83,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         // TODO: handle
         // - ICPM (?)
         // - re-transmit and exponential back-off ... etc
+        stack.EventEmitter.on('rx:'+message.messageID, reciever);
       });
     });
   };

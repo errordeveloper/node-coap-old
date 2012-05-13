@@ -1,3 +1,5 @@
+var util = require ('util');
+
 var stats = {};
 
 var debugHook = function (ref, obj) {
@@ -15,18 +17,11 @@ var statsHook = function (ref, inc) {
 
 var COAP = require ('./')({debug: debugHook, stats: statsHook});
 
-var msg = COAP.helpers.newMessage('PUT', '/foo');
-with (msg) {
-  origin= {address: '::1', port: 5683};
-  messageType= 'CON';
-  messageID= 2400239;
-  options= {
-    //'Accept': [0xf00f],
-    //'Content-Type': 0xdead,
-    'Uri-Host': 'localhost',
-    'Uri-Path': [ '.well-known', 'core' ],
-    //'Token': '123'
-  };
-};
-
-COAP.request.request(msg);
+COAP.request({
+  method: 'GET',
+  host: '::1',
+  path: '.well-known/core'
+}, function (rx) {
+  debugHook(rx);
+  console.log(rx.payload.toString());
+});
