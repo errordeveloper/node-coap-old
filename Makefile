@@ -16,5 +16,10 @@ $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
 libcoap: $(LIBCOAP_PATH)/Makefile
 	$(MAKE) -C $(LIBCOAP_PATH)
 
+ifdef TRAVIS
 libcoap_server: libcoap
 	import/libcoap/examples/coap-server &
+else
+libcoap_server:
+	import/libcoap/examples/coap-server &
+endif
