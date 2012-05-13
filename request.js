@@ -1,6 +1,6 @@
 module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params) {
 
-  var seed = Math.round(Math.random()*40404040);
+  var seed = Math.round(Math.random()*0xF4F4);
 
   var socket = dgram.createSocket ('udp6');
   // XXX: We could do this, but may be we need
@@ -15,6 +15,10 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
   // Attach response router to the parser engine
   stack.EventEmitter.on('message', function (rx) {
     stack.EventEmitter.emit('rx:'+rx.messageID, rx);
+  });
+
+  stack.EventEmitter.on('close_request_socket', function () {
+    socket.close()
   });
 
   var request = function MakeRequest (options, reciever, generate) {
