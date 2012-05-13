@@ -17,7 +17,8 @@ module.exports = ( function COAP (hooks) {
     stack.StateMachine = require  ('./machine');
   }
   
-  COAP.helpers            = require  ('./helpers')(COAP.stack, COAP.hooks, COAP.dgram);
-  COAP.request            = require  ('./request')(COAP.helpers);
+  COAP.helpers            = require  ('./helpers');
+  COAP.request            = require  ('./request')
+      (COAP.dgram, COAP.stack, COAP.hooks, COAP.helpers, {/* TODO */});
   
   return COAP; } );
