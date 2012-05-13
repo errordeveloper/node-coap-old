@@ -14,7 +14,7 @@
     "difflet": ">=0.2.1"
   },
   "scripts": {
-    "test": "node_modules/.bin/nodeunit tests/*.unit.js"
+    "test": "make test"
   },
   "bugs": { "url": "http://github.com/errordeveloper/node-coap/issues" },
   "licenses": [{

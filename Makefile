@@ -1,4 +1,4 @@
-test: node_modules
+test: node_modules libcoap_server
 	node node_modules/.bin/nodeunit tests/*.unit.js
 lint:
 	node node_modules/.bin/node-lint --config=node-lint.json \
