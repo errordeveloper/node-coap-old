@@ -21,12 +21,15 @@ var statsHook = function (ref, inc) {
   console.log("stats["+ref+"]= "+stats[ref]);
 };
 
+p = process.env['LIBCOAP_SERVER_PORT'] || 15683;
+
 var COAP = require ('../')({}); //({debug: debugHook, stats: statsHook});
 
 function get_time (test) {
   COAP.request({
     method: 'GET',
     host: '::1',
+    port: p,
     path: 'time'
   }, function (rx) {
     test.ok(rx.payload instanceof Buffer,
@@ -40,12 +43,13 @@ function get_time (test) {
   });
 }
 
-exports['GET coap://[::1]/time'] = get_time;
+exports['GET coap://[::1]:'+p+'/time'] = get_time;
 
 function get_info (test) {
   COAP.request({
     method: 'GET',
     host: '::1',
+    port: p,
   }, function (rx) {
     test.ok(rx.payload instanceof Buffer,
         'Payload should be an instance of `Buffer`!');
@@ -56,7 +60,7 @@ function get_info (test) {
   });
 }
 
-exports['GET coap://[::1]/'] = get_info;
+exports['GET coap://[::1]:'+p+'/'] = get_info;
   
 /*
 COAP.stack.ParseMessage.encode(msg, function (buf) {

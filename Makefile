@@ -15,6 +15,7 @@ else
 endif
 
 LIBCOAP_PATH = import/libcoap/
+LIBCOAP_SERVER_PORT = 15683
 
 $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
 	(cd $< && autoconf && ./configure) > $(BUILD_LOG)
@@ -24,8 +25,8 @@ libcoap: $(LIBCOAP_PATH)/Makefile
 
 ifdef TRAVIS
 libcoap_server: libcoap
-	import/libcoap/examples/coap-server &
+	import/libcoap/examples/coap-server -p $(LIBCOAP_SERVER_PORT) &
 else
 libcoap_server:
-	import/libcoap/examples/coap-server -v9 &
+	import/libcoap/examples/coap-server -v9 -p $(LIBCOAP_SERVER_PORT) &
 endif
