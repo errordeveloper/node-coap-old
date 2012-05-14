@@ -1,6 +1,7 @@
 module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params) {
 
-  var seed = Math.round(Math.random()*0xF4F4);
+  // The seed should not be greater then 0xFFFF
+  var seed = (Math.random()*0xFFFF) ^ 0xFFFF;
 
   var socket = dgram.createSocket ('udp6');
   // XXX: We could do this, but may be we need
@@ -31,6 +32,13 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
       throw new Error('No target host provided!');
     }
 
+    // We have to do `messageCode` pre-parsing here,
+    // because it is encoded in base32 and doing it
+    // `ParseHeaders` module is not quite appropriate.
+    // That is because it depends on whether we do
+    // a request or response, we either give response
+    // code directly as a number (e.g. 404) or we are
+    // supplying it as a method string (e.g. 'POST').
     var message = {
       protocolVersion: 1,
       messageID: ++seed,
