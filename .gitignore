@@ -1,3 +1,4 @@
 *.sw?
 *.txt.html
 node_modules
+npm-debug.log
