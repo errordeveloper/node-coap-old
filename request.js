@@ -13,8 +13,13 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
 
   // Attach COAP message parser to the socket
   socket.on('message', stack.ParseMessage.decode);
+  //XXX: is there `error` event?
+  //socket.on('error', function(e) { console.log("Error: %o", e); });
+
   // Attach response router to the parser engine
   stack.EventEmitter.on('message', function (rx) {
+    console.log(hooks);
+    if (hooks.debug) { hooks.debug('rx = ', rx); }
     stack.EventEmitter.emit('rx:'+rx.messageID, rx);
   });
 
@@ -93,7 +98,7 @@ module.exports = ( function RequestModule (dgram, stack, hooks, helpers, params)
         // TODO: handle
         // - ICPM (?)
         // - re-transmit and exponential back-off ... etc
-        stack.EventEmitter.on('rx:'+message.messageID, reciever);
+        stack.EventEmitter.once('rx:'+message.messageID, reciever);
       });
     });
   };
