@@ -5,11 +5,12 @@ else
 endif
 
 ifdef TRAVIS
-  TRAVIS_DEPS := libpcap
-libpcap:
+  TRAVIS_DEPS := libpcap-dev
+  APT_FLAGS := --assume-yes
+libpcap-dev:
 	$(info Installing $@)
-	@sudo apt-get update
-	@sudo apt-get install $@
+	(sudo apt-get update $(APT_FLAGS) && \
+	 sudo apt-get install $(APT_FLAGS) $@) > /dev/null
 endif
 
 PLUGTEST_DEPS := libcoap_server
