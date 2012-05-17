@@ -7,7 +7,9 @@ endif
 ifdef TRAVIS
   TRAVIS_DEPS := libpcap
 libpcap:
-	sudo apt-get install $@
+	$(info Installing $@)
+	@sudo apt-get update
+	@sudo apt-get install $@
 endif
 
 PLUGTEST_DEPS := libcoap_server
@@ -27,9 +29,11 @@ node_modules:
 	npm install
 
 $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
+	$(info Configuring $(basename $<))
 	(cd $< && autoconf && ./configure) > $(BUILD_LOG)
 
 libcoap: $(LIBCOAP_PATH)/Makefile
+	$(info Compiling $@)
 	$(MAKE) -C $(LIBCOAP_PATH) >> $(BUILD_LOG)
 
 ifdef TRAVIS
