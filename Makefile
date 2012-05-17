@@ -1,4 +1,23 @@
-test: node_modules libcoap_server
+ifdef TRAVIS
+  BUILD_LOG := /dev/null
+else
+  BUILD_LOG := ./build.log
+endif
+
+ifdef TRAVIS
+  TRAVIS_DEPS := libpcap
+libpcap:
+	sudo apt-get install $@
+endif
+
+PLUGTEST_DEPS := libcoap_server
+
+LIBCOAP_PATH = import/libcoap/
+LIBCOAP_SERVER_PORT = 15683
+
+deps: $(PLUGTEST_DEPS) $(TRAVIS_DEPS)
+
+test: node_modules
 	node node_modules/.bin/nodeunit tests/*.unit.js
 lint:
 	node node_modules/.bin/node-lint --config=node-lint.json \
@@ -6,16 +25,6 @@ lint:
 
 node_modules:
 	npm install
-
-
-ifdef TRAVIS
-  BUILD_LOG := /dev/null
-else
-  BUILD_LOG := ./build.log
-endif
-
-LIBCOAP_PATH = import/libcoap/
-LIBCOAP_SERVER_PORT = 15683
 
 $(LIBCOAP_PATH)/Makefile: $(LIBCOAP_PATH)
 	(cd $< && autoconf && ./configure) > $(BUILD_LOG)
